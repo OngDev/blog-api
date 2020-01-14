@@ -1,0 +1,22 @@
+# Use root/root blogapidevuser/Domaybiet!23 credentials
+version: '3.1'
+
+services:
+
+  blog-db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blog-api
+      MYSQL_USER: blogapidevuser
+      MYSQL_PASSWORD: Domaybiet!23
+    ports:
+    - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8282:8080
