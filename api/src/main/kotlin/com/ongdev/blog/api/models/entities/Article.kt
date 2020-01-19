@@ -1,17 +1,13 @@
 package com.ongdev.blog.api.models.entities
 
-import lombok.Data
-import lombok.NoArgsConstructor
-import java.util.UUID
+import com.ongdev.blog.api.models.entities.base.BaseEntityAudit
 import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 
 @Entity
-@Data
-@NoArgsConstructor
-class Article(
-    @Id var id: UUID? = null,
-    var title: String = "",
-    var description: String = ""
-)
-//Feel free to change this to work on model task
+data class Article(
+	var title: String = "",
+	var description: String = "",
+	@ManyToOne @JoinColumn(name = "author_id", nullable = false) var author: Author? = null
+) : BaseEntityAudit()

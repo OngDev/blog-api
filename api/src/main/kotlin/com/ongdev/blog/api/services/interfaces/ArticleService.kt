@@ -1,7 +1,8 @@
 package com.ongdev.blog.api.services.interfaces
 
-import com.ongdev.blog.api.models.entities.Article
+import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
+import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 
 interface ArticleService {
-    fun createPost(article: Article) : Article
+    fun createArticle(articleCreationRequest: ArticleCreationRequest) : ArticleCreationResponse
 }
