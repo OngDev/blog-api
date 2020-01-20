@@ -1,27 +1,44 @@
-# Javascript Node CircleCI 2.0 configuration file fg
+# Java Gradle CircleCI 2.0 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+# Check https://circleci.com/docs/2.0/language-java/ for more details
 #
 version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:12.13.0
-      - image: circleci/mongo:4.2.1
-    working_directory: ~/repo
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      - image: circleci/mysql:8.0.4
+        environment:
+          MYSQL_DATABASE: test_db
+
+    working_directory: ~/repo/api
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
+      - run: ls -a
+      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "build.gradle.kts" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run: npm install
+
+      - run: gradle dependencies
+
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run eslint:unix
-      - run: npm run test
-      - run: npm run coverage
-      - run: npm run build
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+
+      # run tests!
+      - run: gradle test
