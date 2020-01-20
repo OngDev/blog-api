@@ -4,11 +4,16 @@ import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
 import com.ongdev.blog.api.exceptions.AuthorNotFoundException
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleListResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.repositories.AuthorRepository
 import com.ongdev.blog.api.models.toArticleCreationResponse
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -26,5 +31,20 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository, val authorRep
         }catch (ex: IllegalArgumentException){
             throw ArticleCreationFailedException()
         }
+    }
+
+	override fun getArticlesWithPaginationAndSort(pageable: Pageable, sort: Sort): ArticleListWithPaginationResponse {
+        val pagingAndSort = PageRequest.of(pageable.pageNumber, pageable.pageSize, sort)
+        val articles = articleRepository.findAll(pagingAndSort)
+        val articleListResponseContent = articles.map {
+            it.toArticleCreationResponse()
+        }
+        return ArticleListWithPaginationResponse(articleListResponseContent)
+	}
+
+    override fun getAllArticles(): ArticleListResponse {
+        return ArticleListResponse(articleRepository.findAll().map{
+            it.toArticleCreationResponse()
+        }.toHashSet())
     }
 }
