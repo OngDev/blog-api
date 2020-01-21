@@ -9,10 +9,13 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         description = description
 )
 
-
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
 	id.toString(),
 	title = title,
 	description = description,
-	authorId = author?.id.toString()
+	authorId = author?.id.toString(),
+	name = name,
+	content = content,
+	link = link,
+	publishDate = publishDate
 )
