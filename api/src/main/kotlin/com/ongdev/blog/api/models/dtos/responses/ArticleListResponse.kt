@@ -1,3 +1,3 @@
 package com.ongdev.blog.api.models.dtos.responses
 
-class ArticleListResponse(val result: Set<ArticleCreationResponse>)
+class ArticleListResponse(val result: List<ArticleCreationResponse>)

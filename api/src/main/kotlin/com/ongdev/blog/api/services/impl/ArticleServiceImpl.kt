@@ -42,9 +42,20 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository, val authorRep
         return ArticleListWithPaginationResponse(articleListResponseContent)
 	}
 
-    override fun getAllArticles(): ArticleListResponse {
-        return ArticleListResponse(articleRepository.findAll().map{
+    override fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable, direction: Sort.Direction): ArticleListWithPaginationResponse {
+        val pagingAndSort = PageRequest.of(pageable.pageNumber, pageable.pageSize, direction,"title")
+        val articles = articleRepository.findAll(pagingAndSort)
+        val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()
-        }.toHashSet())
+        }
+        return ArticleListWithPaginationResponse(articleListResponseContent)
+    }
+
+    override fun getAllArticleWithSort(direction: Sort.Direction): ArticleListResponse {
+        val articles = articleRepository.findAll(Sort.by(direction))
+        val articleListResponseContent = articles.map {
+            it.toArticleCreationResponse()
+        }
+        return ArticleListResponse(articleListResponseContent)
     }
 }

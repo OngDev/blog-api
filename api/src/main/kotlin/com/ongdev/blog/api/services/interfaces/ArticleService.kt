@@ -10,5 +10,6 @@ import org.springframework.data.domain.Sort
 interface ArticleService {
     fun createArticle(articleCreationRequest: ArticleCreationRequest) : ArticleCreationResponse
     fun getArticlesWithPaginationAndSort(pageable: Pageable, sort: Sort) : ArticleListWithPaginationResponse
-    fun getAllArticles() : ArticleListResponse
+    fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable, direction: Sort.Direction) : ArticleListWithPaginationResponse
+    fun getAllArticleWithSort(direction: Sort.Direction) : ArticleListResponse
 }
