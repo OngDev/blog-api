@@ -1,0 +1,32 @@
+package com.ongdev.blog.api.controllers
+
+import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
+import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
+import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping("/articles")
+class ArticleController @Autowired constructor(private val articleService : ArticleService) {
+
+    @PostMapping
+    fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest) : ResponseEntity<ArticleCreationResponse> {
+        val articleCreationResponse = articleService.createArticle(articleCreationRequest)
+        return ResponseEntity(articleCreationResponse, HttpStatus.OK)
+    }
+
+    @GetMapping
+    fun getAllArticles(
+        @RequestParam(name = "title", defaultValue = "", required = false) title : String,
+        pageable: Pageable
+    ) : ResponseEntity<ArticleListWithPaginationResponse> {
+        val articleListResponse = if (title.isEmpty()) articleService.getArticlesWithPaginationAndSort(pageable)
+                                    else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
+        return ResponseEntity(articleListResponse, HttpStatus.OK)
+    }
+}
