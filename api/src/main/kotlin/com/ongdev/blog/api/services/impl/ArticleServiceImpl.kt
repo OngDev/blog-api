@@ -4,16 +4,13 @@ import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
 import com.ongdev.blog.api.exceptions.AuthorNotFoundException
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleListResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.repositories.AuthorRepository
 import com.ongdev.blog.api.models.toArticleCreationResponse
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -33,29 +30,20 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository, val authorRep
         }
     }
 
-	override fun getArticlesWithPaginationAndSort(pageable: Pageable, sort: Sort): ArticleListWithPaginationResponse {
-        val pagingAndSort = PageRequest.of(pageable.pageNumber, pageable.pageSize, sort)
-        val articles = articleRepository.findAll(pagingAndSort)
+	override fun getArticlesWithPaginationAndSort(pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAll(pageable)
         val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()
         }
         return ArticleListWithPaginationResponse(articleListResponseContent)
 	}
 
-    override fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable, direction: Sort.Direction): ArticleListWithPaginationResponse {
-        val pagingAndSort = PageRequest.of(pageable.pageNumber, pageable.pageSize, direction,"title")
-        val articles = articleRepository.findAll(pagingAndSort)
+    override fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllByTitle(title, pageable)
         val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()
         }
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 
-    override fun getAllArticleWithSort(direction: Sort.Direction): ArticleListResponse {
-        val articles = articleRepository.findAll(Sort.by(direction))
-        val articleListResponseContent = articles.map {
-            it.toArticleCreationResponse()
-        }
-        return ArticleListResponse(articleListResponseContent)
-    }
 }
