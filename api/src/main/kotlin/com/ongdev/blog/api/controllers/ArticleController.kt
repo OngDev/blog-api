@@ -1,8 +1,10 @@
 package com.ongdev.blog.api.controllers
 
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -29,4 +31,12 @@ class ArticleController @Autowired constructor(private val articleService : Arti
                                     else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
         return ResponseEntity(articleListResponse, HttpStatus.OK)
     }
+
+    @PutMapping
+    fun updateArticle(
+            @RequestParam(name = "id", required = true) id: String,
+            @RequestBody articleUpdatingRequest: ArticleUpdatingRequest
+    ) : ResponseEntity<ArticleUpdatingResponse> = ResponseEntity(
+            articleService.updateArticle(articleUpdatingRequest, id),
+            HttpStatus.OK)
 }
