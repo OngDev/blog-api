@@ -12,4 +12,5 @@ interface ArticleService {
     fun getArticlesWithPaginationAndSort(pageable: Pageable) : ArticleListWithPaginationResponse
     fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable) : ArticleListWithPaginationResponse
     fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String) : ArticleUpdatingResponse
+    fun deleteArticle(id: String)
 }
