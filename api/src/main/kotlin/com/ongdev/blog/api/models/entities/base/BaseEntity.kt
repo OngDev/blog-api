@@ -17,6 +17,6 @@ abstract class BaseEntity : Serializable {
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@GeneratedValue(generator = "uuid")
-	@Column(unique = true, nullable = false, updatable = false)
+	@Column(unique = true, nullable = false, updatable = false, columnDefinition = "BINARY(16)")
 	var id: UUID? = null
 }

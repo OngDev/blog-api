@@ -9,6 +9,6 @@ class ArticleCreationResponse(
     val content: String,
     val name: String,
     val publishDate: Date?,
-    val link: String,
-	val authorId: String
+    val link: String
+	//val authorId: String
 )
