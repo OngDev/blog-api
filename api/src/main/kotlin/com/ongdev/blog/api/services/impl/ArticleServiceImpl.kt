@@ -1,9 +1,6 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
-import com.ongdev.blog.api.exceptions.ArticleNotFoundException
-import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
-import com.ongdev.blog.api.exceptions.AuthorNotFoundException
+import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.*
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
@@ -58,6 +55,19 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
             return articleRepository.save(article).toArticleUpdatingResponse()
         }catch (ex: IllegalArgumentException){
             throw ArticleUpdatingFailedException()
+        }
+    }
+
+    override fun deleteArticle(id: String){
+        val optionalArticle = articleRepository.findById(UUID.fromString(id))
+        if(!optionalArticle.isPresent){
+            throw ArticleNotFoundException()
+        }
+        val article = optionalArticle.get()
+        try {
+            return articleRepository.delete(article)
+        }catch (ex: IllegalArgumentException){
+            throw ArticleDeletingFailedException()
         }
     }
 }
