@@ -40,8 +40,8 @@ class ArticleController @Autowired constructor(private val articleService : Arti
             articleService.updateArticle(articleUpdatingRequest, id),
             HttpStatus.OK)
 
-    @DeleteMapping
-    fun deleteArticle(@RequestParam(name = "id", required = true) id: String) : ResponseEntity<Void> {
+    @DeleteMapping("/{id}")
+    fun deleteArticle(@PathVariable(name = "id", required = true) id: String) : ResponseEntity<Void> {
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
