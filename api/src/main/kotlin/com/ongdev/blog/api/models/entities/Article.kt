@@ -15,7 +15,7 @@ data class Article(
 	var content: String = "",
 	var name: String = "",
 	var publishDate: Date? = null,
-	var link: String = "",
-	@OneToMany(mappedBy = "article") var comments: Set<Comment> = HashSet(),
-	@ManyToOne @JoinColumn(name = "author_id", nullable = false) var author: Author? = null
+	var link: String = ""
+	//@OneToMany(mappedBy = "article") var comments: Set<Comment> = HashSet(),
+	//@ManyToOne @JoinColumn(name = "author_id", nullable = false) var author: Author? = null
 ) : BaseEntityAudit()

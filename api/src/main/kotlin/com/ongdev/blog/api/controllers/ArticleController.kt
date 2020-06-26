@@ -1,8 +1,10 @@
 package com.ongdev.blog.api.controllers
 
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -28,5 +30,19 @@ class ArticleController @Autowired constructor(private val articleService : Arti
         val articleListResponse = if (title.isEmpty()) articleService.getArticlesWithPaginationAndSort(pageable)
                                     else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
         return ResponseEntity(articleListResponse, HttpStatus.OK)
+    }
+
+    @PutMapping
+    fun updateArticle(
+            @RequestParam(name = "id", required = true) id: String,
+            @RequestBody articleUpdatingRequest: ArticleUpdatingRequest
+    ) : ResponseEntity<ArticleUpdatingResponse> = ResponseEntity(
+            articleService.updateArticle(articleUpdatingRequest, id),
+            HttpStatus.OK)
+
+    @DeleteMapping("/{id}")
+    fun deleteArticle(@PathVariable(name = "id", required = true) id: String) : ResponseEntity<Void> {
+        articleService.deleteArticle(id)
+        return ResponseEntity(HttpStatus.OK)
     }
 }

@@ -1,6 +1,8 @@
 package com.ongdev.blog.api.exceptions.controller
 
 import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
+import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
+import com.ongdev.blog.api.exceptions.ArticleNotFoundException
 import com.ongdev.blog.api.exceptions.AuthorNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,6 +24,22 @@ class ExceptionController {
 		return ResponseEntity(
 			"Could not create article",
 			HttpStatus.BAD_REQUEST
+		)
+	}
+
+	@ExceptionHandler(value = [ArticleNotFoundException::class])
+	fun handleArticleNotFoundException(articleNotFoundException: ArticleNotFoundException) : ResponseEntity<Any> {
+		return ResponseEntity(
+				"Could not find article with id",
+				HttpStatus.NOT_FOUND)
+	}
+
+	@ExceptionHandler(value= [ArticleDeletingFailedException::class])
+	fun handleArticleDeletingFailedException(articleDeletingFailedException: ArticleDeletingFailedException)
+			: ResponseEntity<Any> {
+		return ResponseEntity(
+				"Could not delete article",
+				HttpStatus.BAD_REQUEST
 		)
 	}
 }
