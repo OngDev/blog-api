@@ -41,6 +41,10 @@ dependencies {
     }
     compileOnly("org.springdoc","springdoc-openapi-core","1.1.49")
     compileOnly("org.springdoc","springdoc-openapi-ui", "1.1.49")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("io.mockk:mockk:1.8.8")
 }
 
 tasks.withType<Test> {

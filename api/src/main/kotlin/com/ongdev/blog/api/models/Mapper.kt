@@ -3,7 +3,7 @@ package com.ongdev.blog.api.models
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponses
 import com.ongdev.blog.api.models.entities.Article
 
 fun ArticleCreationRequest.toArticleEntity() = Article(
@@ -26,7 +26,7 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         publishDate = publishDate
 )
 
-fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
+fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponses(
         id.toString(),
         title = title,
         description = description,

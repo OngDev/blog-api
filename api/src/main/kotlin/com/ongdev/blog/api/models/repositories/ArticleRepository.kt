@@ -10,4 +10,5 @@ import java.util.*
 @Repository
 interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
 	fun findAllByTitle(title: String, pageable: Pageable) : Page<Article>
+	fun findAllByName(name: String): List<Article>
 }

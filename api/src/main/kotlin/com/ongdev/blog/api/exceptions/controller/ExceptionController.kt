@@ -14,16 +14,16 @@ class ExceptionController {
 	@ExceptionHandler(value = [AuthorNotFoundException::class])
 	fun handleAuthorNotFoundException(authorNotFoundException: AuthorNotFoundException) : ResponseEntity<Any> {
 		return ResponseEntity(
-			"Could not find author with id: ${authorNotFoundException.message}",
-		    HttpStatus.NOT_FOUND)
+				"Could not find author with id: ${authorNotFoundException.message}",
+				HttpStatus.NOT_FOUND)
 	}
 
 	@ExceptionHandler(value= [ArticleCreationFailedException::class])
 	fun handleArticleCreationFailedException(articleCreationFailedException: ArticleCreationFailedException)
-		: ResponseEntity<Any> {
+			: ResponseEntity<Any> {
 		return ResponseEntity(
-			"Could not create article",
-			HttpStatus.BAD_REQUEST
+				"Could not create article",
+				HttpStatus.BAD_REQUEST
 		)
 	}
 

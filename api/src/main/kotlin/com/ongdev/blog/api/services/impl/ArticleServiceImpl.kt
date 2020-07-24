@@ -6,7 +6,8 @@ import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponses
+import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.data.domain.Pageable
@@ -29,13 +30,13 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         }
     }
 
-	override fun getArticlesWithPaginationAndSort(pageable: Pageable): ArticleListWithPaginationResponse {
+    override fun getArticlesWithPaginationAndSort(pageable: Pageable): ArticleListWithPaginationResponse {
         val articles = articleRepository.findAll(pageable)
         val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()
         }
         return ArticleListWithPaginationResponse(articleListResponseContent)
-	}
+    }
 
     override fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable): ArticleListWithPaginationResponse {
         val articles = articleRepository.findAllByTitle(title, pageable)
@@ -44,7 +45,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         }
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
-    override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String) : ArticleUpdatingResponse {
+    override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String) : ArticleUpdatingResponses {
         val optionalArticle = articleRepository.findById(UUID.fromString(id))
         if(!optionalArticle.isPresent){
             throw ArticleNotFoundException()
@@ -68,6 +69,18 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
             return articleRepository.delete(article)
         }catch (ex: IllegalArgumentException){
             throw ArticleDeletingFailedException()
+        }
+    }
+
+    override fun getAllStoriesWithTag(name:String):List<Article> {
+        val listArticle = articleRepository.findAllByName(name)
+        listArticle.ifEmpty {
+            throw ArticleNotFoundException()
+        }
+        try {
+            return listArticle
+        }catch (ex: IllegalArgumentException){
+            throw ArticlesGettingFailedException()
         }
     }
 }
