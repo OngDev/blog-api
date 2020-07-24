@@ -1,16 +1,19 @@
 package com.ongdev.blog.api.controllers
 
+
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponses
+import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+
 
 @RestController
 @RequestMapping("/articles")
@@ -44,5 +47,11 @@ class ArticleController @Autowired constructor(private val articleService : Arti
     fun deleteArticle(@PathVariable(name = "id", required = true) id: String) : ResponseEntity<Void> {
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    @GetMapping("/{tag}")
+    fun getAListArticleWithTag(@PathVariable(name = "tag", required = true) tag: String) : ResponseEntity<List<Article>> {
+        val articleListResponse = articleService.getAllStoriesWithTag(tag)
+        return ResponseEntity(articleListResponse,HttpStatus.OK)
     }
 }
