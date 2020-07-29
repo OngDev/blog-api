@@ -1,47 +1,25 @@
 package com.ongdev.blog.api
 
-
 import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.services.impl.ArticleServiceImpl
-import io.mockk.mockk
-
-
-import org.junit.jupiter.api.Assertions
-
+import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.junit.jupiter.api.BeforeEach
-
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-
-
-import org.springframework.context.annotation.Bean
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
-
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.util.AssertionErrors.assertEquals
 
-
-@ExtendWith(SpringExtension::class)
 @ContextConfiguration
 @TestPropertySource("/application-test.properties")
+@ExtendWith(SpringExtension::class)
 class TodoServiceTest{
 
-    @TestConfiguration
-    class TodoServiceTest2Configuration {
-        @Bean
-        fun articleServiceImpl() = mockk<ArticleServiceImpl>()
-    }
-
-    @Mock
-    val articleRepository: ArticleRepository = mockk()
-    @Autowired
-    val articleServiceImpl: ArticleServiceImpl = mockk()
+    private val articleRepository: ArticleRepository = Mockito.mock(ArticleRepository::class.java)
+    private lateinit var articleService : ArticleService
 
     @BeforeEach
     fun setUp() {
@@ -51,11 +29,12 @@ class TodoServiceTest{
                 , Article("3","3","3","hi",null, "3")
         )
 
-        Mockito.`when`(articleRepository.findAll()).thenReturn(sample)
+        Mockito.`when`(articleRepository.findAllByName(Mockito.anyString())).thenReturn(sample)
+        articleService = ArticleServiceImpl(articleRepository)
     }
 
     @Test
     fun testGetAllModels() {
-        Assertions.assertEquals(3, articleServiceImpl.getAllStoriesWithTag("hi").size)
+        assertEquals("Number of stories should be 3",3, articleService.getAllStoriesWithTag("hi").size)
     }
 }
