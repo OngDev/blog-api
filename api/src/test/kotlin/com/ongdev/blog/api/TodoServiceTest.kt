@@ -4,7 +4,6 @@ import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.services.impl.ArticleServiceImpl
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
