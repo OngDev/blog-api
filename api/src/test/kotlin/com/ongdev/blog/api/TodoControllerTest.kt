@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -18,11 +20,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 
+
 @TestPropertySource("/application-test.properties")
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(ArticleController::class)
+@TestConfiguration
+@ComponentScan("com.ongdev.blog.api.services.impl",
+        "com.ongdev.blog.api.controllers")
 class TodoControllerTest @Autowired constructor(private val mockMvc: MockMvc) {
-
+    @Autowired
     private val articleService: ArticleService = Mockito.mock(ArticleService::class.java)
 
     @Test
