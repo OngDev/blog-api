@@ -10,7 +10,7 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         title = title,
         description = description,
         content = content,
-        link = link,
+//        link = link,
         name = name,
         publishDate = publishDate
 )
@@ -22,7 +22,7 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         //authorId = author?.id.toString(),
         name = name,
         content = content,
-        link = link,
+//        link = link,
         publishDate = publishDate
 )
 
@@ -33,7 +33,7 @@ fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
         //authorId = author?.id.toString(),
         name = name,
         content = content,
-        link = link,
+//        link = link,
         publishDate = publishDate
 )
 
