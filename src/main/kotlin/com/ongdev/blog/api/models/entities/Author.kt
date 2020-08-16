@@ -8,9 +8,7 @@ import javax.persistence.OneToMany
 import kotlin.collections.HashSet
 
 @Entity
-data class Author(
-		var userId: UUID? = null,
-
+class Author(
 		@OneToMany(mappedBy = "author", cascade = [CascadeType.REMOVE])
 		var articles: Set<Article> = HashSet()
 ) : BaseEntity()

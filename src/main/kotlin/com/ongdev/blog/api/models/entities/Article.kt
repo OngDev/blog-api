@@ -7,12 +7,12 @@ import javax.persistence.*
 import kotlin.collections.HashSet
 
 @Entity
-data class Article(
+class Article(
 		@Column(unique=true)
 		var title: String = "",
 		var description: String = "",
 		var content: String = "",
-		var name: String = "", // convert title to name: remove letter accents and replace space with dash '-'
+		var link: String = "", // remove letter accent and replace space with dash '-' from title
 		var publishDate: Date? = null,
 
 		@ManyToOne(fetch = FetchType.LAZY)

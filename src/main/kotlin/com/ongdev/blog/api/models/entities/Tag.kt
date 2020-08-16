@@ -4,9 +4,9 @@ import com.ongdev.blog.api.models.entities.base.BaseEntityAudit
 import javax.persistence.*
 
 @Entity
-data class Tag(
+class Tag(
     var name: String = "",
-
+    var link: String = "", // remove letter accent and replace space with dash '-' from name
     @ManyToMany
     @JoinTable(name = "article_tag",
         joinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")],

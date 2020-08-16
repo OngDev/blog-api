@@ -6,12 +6,9 @@ import javax.persistence.*
 import kotlin.collections.HashSet
 
 @Entity
-data class Comment(
+class Comment(
+		var userId: UUID? = null,
 		var content: String = "",
-
-		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "author_id", nullable = false)
-		var author: Author? = null,
 
 		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "article_id")
