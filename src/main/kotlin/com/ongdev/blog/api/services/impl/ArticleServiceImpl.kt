@@ -6,9 +6,9 @@ import com.ongdev.blog.api.exceptions.ArticleNotFoundException
 import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.dtos.responses.article.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.article.ArticleListWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.mapToArticle
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.repositories.CategoryRepository
@@ -80,9 +80,11 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
         }
     }
 
+    //10 posts /page
     override fun getListOfArticlesForEachCategory(name: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        //chua phan trang
         val categories = categoryRepository.findAllByName(name)
-        val articles = articleRepository.findAllByCategories(categories, pageable)
+        val articles = articleRepository.findAllByCategoriesIn(categories, pageable)
         val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()
         }

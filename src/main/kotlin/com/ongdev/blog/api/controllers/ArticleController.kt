@@ -4,7 +4,7 @@ import com.ongdev.blog.api.models.dtos.requests.article.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.article.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.article.ArticleListWithPaginationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable

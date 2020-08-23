@@ -3,8 +3,8 @@ package com.ongdev.blog.api.models
 import com.ongdev.blog.api.models.dtos.requests.Category.CategoryCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.dtos.responses.article.ArticleCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.dtos.responses.category.CategoryCreationResponse
 import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.entities.Category

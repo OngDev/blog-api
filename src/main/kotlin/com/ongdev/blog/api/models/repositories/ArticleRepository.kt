@@ -11,5 +11,5 @@ import java.util.*
 @Repository
 interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
 	fun findAllByTitle(title: String, pageable: Pageable) : Page<Article>
-	fun findAllByCategories(categories: Set<Category>, pageable: Pageable): Page<Article>
+	fun findAllByCategoriesIn(categories: Set<Category>, pageable: Pageable): Page<Article>
 }
