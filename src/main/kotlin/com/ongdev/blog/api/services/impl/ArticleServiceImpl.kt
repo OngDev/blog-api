@@ -73,15 +73,16 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
         }
     }
 
-    override fun getListOfArticlesForEachCategory(name: String, currentPage: Int): ArticleListWithPaginationResponse {
+
+    override fun getListOfArticlesForEachCategory(name: String, currentPage:Int): ArticleListWithPaginationResponse {
         val categories = categoryRepository.findAllByName(name)
-        var getCurrentPage = 0
-        if (currentPage - 1 > getCurrentPage)
-            getCurrentPage = currentPage - 1
+        var getCurrentPage=0
+        if(currentPage-1>getCurrentPage)
+            getCurrentPage=currentPage-1
         val articles = articleRepository.findAllByCategoriesIn(categories, PageRequest.of(getCurrentPage, 10))
-        if (articles.isEmpty)
+        if(articles.isEmpty)
             throw IsEmptyException()
-        else {
+        else{
             val articleListResponseContent = articles.map {
                 it.toArticleCreationResponse()
             }
