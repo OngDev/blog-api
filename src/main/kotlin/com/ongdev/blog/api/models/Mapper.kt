@@ -1,17 +1,21 @@
 package com.ongdev.blog.api.models
 
-import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
-import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.requests.category.CategoryCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.article.ArticleCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.article.ArticleUpdatingRequest
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.category.CategoryCreationResponse
 import com.ongdev.blog.api.models.entities.Article
+import com.ongdev.blog.api.models.entities.Category
 
 fun ArticleCreationRequest.toArticleEntity() = Article(
         title = title,
         description = description,
         content = content,
         link = link,
-        publishDate = publishDate
+        publishDate = publishDate,
+        categories = categories
 )
 
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
@@ -20,7 +24,8 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         description = description,
         content = content,
         link = link,
-        publishDate = publishDate
+        publishDate = publishDate,
+        nameCategories = categories.map { it.name }
 )
 
 fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
@@ -32,9 +37,21 @@ fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
         publishDate = publishDate
 )
 
-fun ArticleUpdatingRequest.mapToArticle(article: Article) : Article {
+fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     article.content = content
     article.description = description
     article.title = title
     return article
 }
+
+// --------------------------category----------------------------------------
+fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
+        id.toString(),
+        name = name,
+        link = link
+)
+
+fun CategoryCreationRequest.toCategoryEntity() = Category(
+        link = link,
+        name = name
+)

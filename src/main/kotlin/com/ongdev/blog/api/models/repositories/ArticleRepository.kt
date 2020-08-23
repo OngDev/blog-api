@@ -1,6 +1,7 @@
 package com.ongdev.blog.api.models.repositories
 
 import com.ongdev.blog.api.models.entities.Article
+import com.ongdev.blog.api.models.entities.Category
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -9,5 +10,6 @@ import java.util.*
 
 @Repository
 interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
-	fun findAllByTitle(title: String, pageable: Pageable) : Page<Article>
+    fun findAllByTitle(title: String, pageable: Pageable): Page<Article>
+    fun findAllByCategoriesIn(categories: Set<Category>, pageable: Pageable): Page<Article>
 }

@@ -1,4 +1,4 @@
-package com.ongdev.blog.api.models.dtos.responses
+package com.ongdev.blog.api.models.dtos.responses.article
 
 import org.springframework.data.domain.Page
 

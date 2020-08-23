@@ -1,6 +1,4 @@
-package com.ongdev.blog.api.models.dtos.requests
-
-import java.util.*
+package com.ongdev.blog.api.models.dtos.requests.article
 
 class ArticleUpdatingRequest(
         val title: String,
