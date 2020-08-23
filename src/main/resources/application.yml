@@ -1,0 +1,71 @@
+# Common properties
+spring:
+  profiles:
+    active:
+      - ${ACTIVE_PROFILE}
+server:
+  port: 9992
+app:
+  authUrl: ${AUTH_URL}
+---
+# dev H2 profile properties
+spring:
+  profiles: dev-h2
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    url: jdbc:h2:mem:dev
+    username: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+---
+# PROD profile properties
+spring:
+  profiles: dev-postgres
+
+  datasource:
+    password: postgres
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/user-anm-dev
+    username: postgres
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+---
+# PROD profile properties
+spring:
+  profiles: prod
+
+  datasource:
+    platform: postgres
+    url: ${DATABASE_URL}
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+
+---
+# TEST profile properties
+spring:
+  profiles: test
+
+  datasource:
+    password: postgres
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
