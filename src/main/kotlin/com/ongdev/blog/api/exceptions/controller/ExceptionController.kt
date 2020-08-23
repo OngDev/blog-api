@@ -1,9 +1,6 @@
 package com.ongdev.blog.api.exceptions.controller
 
-import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
-import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
-import com.ongdev.blog.api.exceptions.ArticleNotFoundException
-import com.ongdev.blog.api.exceptions.AuthorNotFoundException
+import com.ongdev.blog.api.exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -41,5 +38,12 @@ class ExceptionController {
 				"Could not delete article",
 				HttpStatus.BAD_REQUEST
 		)
+	}
+
+	@ExceptionHandler(value = [IsEmptyException::class])
+	fun handleisAnEmptyException(isEmptyException: IsEmptyException): ResponseEntity<Any> {
+		return ResponseEntity(
+				"is Empty",
+				HttpStatus.NOT_FOUND)
 	}
 }

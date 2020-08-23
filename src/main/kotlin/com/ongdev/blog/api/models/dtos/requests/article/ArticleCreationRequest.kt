@@ -1,5 +1,6 @@
-package com.ongdev.blog.api.models.dtos.requests
+package com.ongdev.blog.api.models.dtos.requests.article
 
+import com.ongdev.blog.api.models.entities.Category
 import java.util.*
 
 class ArticleCreationRequest(
@@ -8,5 +9,6 @@ class ArticleCreationRequest(
         val content: String,
         val name: String,
         val publishDate: Date?,
-        val link: String
+        val link: String,
+        val categories: Set<Category>
 )

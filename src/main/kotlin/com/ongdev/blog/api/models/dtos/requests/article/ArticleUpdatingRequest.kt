@@ -1,4 +1,4 @@
-package com.ongdev.blog.api.models.dtos.requests
+package com.ongdev.blog.api.models.dtos.requests.article
 
 import java.util.*
 

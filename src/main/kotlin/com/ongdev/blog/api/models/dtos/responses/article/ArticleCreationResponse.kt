@@ -1,5 +1,6 @@
-package com.ongdev.blog.api.models.dtos.responses
+package com.ongdev.blog.api.models.dtos.responses.article
 
+import com.ongdev.blog.api.models.entities.Category
 import java.util.*
 
 class ArticleCreationResponse(
@@ -9,6 +10,6 @@ class ArticleCreationResponse(
     val content: String,
     val name: String,
     val publishDate: Date?,
-    val link: String
-	//val authorId: String
+    val link: String,
+	val categories: Set<Category>
 )

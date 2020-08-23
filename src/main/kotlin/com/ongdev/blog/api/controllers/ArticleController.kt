@@ -1,9 +1,9 @@
 package com.ongdev.blog.api.controllers
 
-import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
-import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.requests.article.ArticleCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.article.ArticleUpdatingRequest
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.article.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,4 +45,18 @@ class ArticleController @Autowired constructor(private val articleService : Arti
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("/categories/{name}")
+    fun getListOfArticlesForEachCategory(
+            @PathVariable(name = "name", required = true) name: String,
+            pageable: Pageable
+    ): ResponseEntity<ArticleListWithPaginationResponse>
+            = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, pageable), HttpStatus.OK)
+//    @GetMapping("/categories/{name}/{currentPage}")
+//    fun getListOfArticlesForEachCategory(
+//            @PathVariable(name = "name", required = true) name: String,
+//            pageable: Pageable,
+//            @PathVariable(name = "currentPage", required = true) currentPage: Int
+//    ): ResponseEntity<Page<Article>> = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, currentPage), HttpStatus.OK)
+
 }
