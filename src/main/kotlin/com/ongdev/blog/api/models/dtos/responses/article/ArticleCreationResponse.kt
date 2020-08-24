@@ -11,7 +11,7 @@ class ArticleCreationResponse(
         val name: String,
         val publishDate: Date?,
         val link: String,
-        val categories: Set<Category>
+        val nameCategories: List<String>
 )
 
 class ArticleUpdatingResponse(
@@ -22,5 +22,4 @@ class ArticleUpdatingResponse(
         val name: String,
         val publishDate: Date?,
         val link: String
-        //val authorId: String
 )

@@ -1,10 +1,9 @@
 package com.ongdev.blog.api.models.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.ongdev.blog.api.models.entities.base.BaseEntityAudit
 import java.util.*
 import javax.persistence.Entity
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import kotlin.collections.HashSet
 
@@ -16,9 +15,7 @@ data class Article(
         var name: String = "",
         var publishDate: Date? = null,
         var link: String = "",
-        @ManyToMany
-        @JoinTable(name = "article_category",
-                joinColumns = [JoinColumn(name = "article_id", referencedColumnName = "id")],
-                inverseJoinColumns = [JoinColumn(name = "category_id", referencedColumnName = "id")])
+        @ManyToMany(mappedBy = "articles")
+        @JsonIgnoreProperties("articles")
         var categories: Set<Category> = HashSet()
 ) : BaseEntityAudit()

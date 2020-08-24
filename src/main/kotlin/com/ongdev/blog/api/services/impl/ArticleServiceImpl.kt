@@ -25,13 +25,10 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
                          , val categoryRepository: CategoryRepository) : ArticleService {
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
         val article = articleCreationRequest.toArticleEntity()
-//        val optionalAuthor = authorRepository.findById(UUID.fromString(articleCreationRequest.authorId))
-//        if(!optionalAuthor.isPresent){
-//          throw AuthorNotFoundException()
-//        }
-//        article.author = optionalAuthor.get()
+
         try {
             return articleRepository.save(article).toArticleCreationResponse()
+
         } catch (ex: IllegalArgumentException) {
             throw ArticleCreationFailedException()
         }
@@ -91,3 +88,5 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 }
+
+

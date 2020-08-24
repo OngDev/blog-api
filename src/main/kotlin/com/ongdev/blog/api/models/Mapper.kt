@@ -19,23 +19,22 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         categories = categories
 )
 
+
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         id.toString(),
         title = title,
         description = description,
-        //authorId = author?.id.toString(),
         name = name,
         content = content,
         link = link,
         publishDate = publishDate,
-        categories = categories
+        nameCategories = categories.map { it.name }
 )
 
 fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
         id.toString(),
         title = title,
         description = description,
-        //authorId = author?.id.toString(),
         name = name,
         content = content,
         link = link,

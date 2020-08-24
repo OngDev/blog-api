@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/articles")
-class ArticleController @Autowired constructor(private val articleService : ArticleService) {
+class ArticleController @Autowired constructor(private val articleService: ArticleService) {
 
     @PostMapping
-    fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest) : ResponseEntity<ArticleCreationResponse> {
+    fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest): ResponseEntity<ArticleCreationResponse> {
         val articleCreationResponse = articleService.createArticle(articleCreationRequest)
         return ResponseEntity(articleCreationResponse, HttpStatus.OK)
     }
 
     @GetMapping
     fun getAllArticles(
-        @RequestParam(name = "title", defaultValue = "", required = false) title : String,
-        pageable: Pageable
-    ) : ResponseEntity<ArticleListWithPaginationResponse> {
+            @RequestParam(name = "title", defaultValue = "", required = false) title: String,
+            pageable: Pageable
+    ): ResponseEntity<ArticleListWithPaginationResponse> {
         val articleListResponse = if (title.isEmpty()) articleService.getArticlesWithPaginationAndSort(pageable)
-                                    else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
+        else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
         return ResponseEntity(articleListResponse, HttpStatus.OK)
     }
 
@@ -36,12 +36,12 @@ class ArticleController @Autowired constructor(private val articleService : Arti
     fun updateArticle(
             @RequestParam(name = "id", required = true) id: String,
             @RequestBody articleUpdatingRequest: ArticleUpdatingRequest
-    ) : ResponseEntity<ArticleUpdatingResponse> = ResponseEntity(
+    ): ResponseEntity<ArticleUpdatingResponse> = ResponseEntity(
             articleService.updateArticle(articleUpdatingRequest, id),
             HttpStatus.OK)
 
     @DeleteMapping("/{id}")
-    fun deleteArticle(@PathVariable(name = "id", required = true) id: String) : ResponseEntity<Void> {
+    fun deleteArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<Void> {
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
@@ -50,8 +50,7 @@ class ArticleController @Autowired constructor(private val articleService : Arti
     fun getListOfArticlesForEachCategory(
             @PathVariable(name = "name", required = true) name: String,
             pageable: Pageable
-    ): ResponseEntity<ArticleListWithPaginationResponse>
-            = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, pageable), HttpStatus.OK)
+    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, pageable), HttpStatus.OK)
 //    @GetMapping("/categories/{name}/{currentPage}")
 //    fun getListOfArticlesForEachCategory(
 //            @PathVariable(name = "name", required = true) name: String,
