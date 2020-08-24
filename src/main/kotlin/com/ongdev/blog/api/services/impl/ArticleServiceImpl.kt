@@ -1,9 +1,6 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
-import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
-import com.ongdev.blog.api.exceptions.ArticleNotFoundException
-import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
+import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.article.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.article.ArticleCreationResponse
@@ -16,6 +13,7 @@ import com.ongdev.blog.api.models.toArticleCreationResponse
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.models.toArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
@@ -77,15 +75,20 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
         }
     }
 
-    //10 posts /page
-    override fun getListOfArticlesForEachCategory(name: String, pageable: Pageable): ArticleListWithPaginationResponse {
-        //chua phan trang
+    override fun getListOfArticlesForEachCategory(name: String, currentPage:Int): ArticleListWithPaginationResponse {
         val categories = categoryRepository.findAllByName(name)
-        val articles = articleRepository.findAllByCategoriesIn(categories, pageable)
-        val articleListResponseContent = articles.map {
-            it.toArticleCreationResponse()
+        var getCurrentPage:Int=0
+        if(currentPage-1>getCurrentPage)
+            getCurrentPage=currentPage-1
+        val articles = articleRepository.findAllByCategoriesIn(categories, PageRequest.of(getCurrentPage, 10))
+        if(articles.isEmpty)
+            throw IsEmptyException()
+        else{
+            val articleListResponseContent = articles.map {
+                it.toArticleCreationResponse()
+            }
+            return ArticleListWithPaginationResponse(articleListResponseContent)
         }
-        return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 }
 

@@ -1,16 +1,17 @@
 package com.ongdev.blog.api.models.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.ongdev.blog.api.models.entities.base.BaseEntityAudit
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.ManyToMany
 
 @Entity
-data class Category(
+class Category(
         var name: String = "",
         var link: String = "", // remove letter accent and replace space with dash '-' from name
-        @ManyToMany
-
-        @JoinTable(name = "article_category",
-                joinColumns = [JoinColumn(name = "category_id", referencedColumnName = "id")],
-                inverseJoinColumns = [JoinColumn(name = "article_id", referencedColumnName = "id")])
+        @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories", cascade = [CascadeType.ALL])
+        @JsonIgnore
         var articles: Set<Article> = HashSet()
 ) : BaseEntityAudit()

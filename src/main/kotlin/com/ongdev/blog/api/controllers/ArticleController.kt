@@ -49,13 +49,8 @@ class ArticleController @Autowired constructor(private val articleService: Artic
     @GetMapping("/categories/{name}")
     fun getListOfArticlesForEachCategory(
             @PathVariable(name = "name", required = true) name: String,
-            pageable: Pageable
-    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, pageable), HttpStatus.OK)
-//    @GetMapping("/categories/{name}/{currentPage}")
-//    fun getListOfArticlesForEachCategory(
-//            @PathVariable(name = "name", required = true) name: String,
-//            pageable: Pageable,
-//            @PathVariable(name = "currentPage", required = true) currentPage: Int
-//    ): ResponseEntity<Page<Article>> = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, currentPage), HttpStatus.OK)
+            @RequestParam(name = "currentpage", required = true) currentPage: Int
+    ): ResponseEntity<ArticleListWithPaginationResponse>
+            = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, currentPage), HttpStatus.OK)
 
 }
