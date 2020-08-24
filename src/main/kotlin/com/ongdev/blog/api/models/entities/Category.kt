@@ -1,6 +1,5 @@
 package com.ongdev.blog.api.models.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.ongdev.blog.api.models.entities.base.BaseEntityAudit
 import javax.persistence.*
 
@@ -13,6 +12,5 @@ data class Category(
         @JoinTable(name = "article_category",
                 joinColumns = [JoinColumn(name = "category_id", referencedColumnName = "id")],
                 inverseJoinColumns = [JoinColumn(name = "article_id", referencedColumnName = "id")])
-        @JsonIgnoreProperties("categories")
         var articles: Set<Article> = HashSet()
 ) : BaseEntityAudit()

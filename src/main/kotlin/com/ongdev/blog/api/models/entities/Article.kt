@@ -1,6 +1,5 @@
 package com.ongdev.blog.api.models.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.ongdev.blog.api.models.entities.base.BaseEntityAudit
 import java.util.*
 import javax.persistence.Entity
@@ -16,6 +15,5 @@ data class Article(
         var publishDate: Date? = null,
         var link: String = "",
         @ManyToMany(mappedBy = "articles")
-        @JsonIgnoreProperties("articles")
         var categories: Set<Category> = HashSet()
 ) : BaseEntityAudit()
