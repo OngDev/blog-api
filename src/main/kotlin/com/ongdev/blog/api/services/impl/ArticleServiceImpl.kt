@@ -90,6 +90,19 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
             return ArticleListWithPaginationResponse(articleListResponseContent)
         }
     }
+
+    override fun getAPostById(id: String): ArticleCreationResponse {
+        val optionalArticle = articleRepository.findById(UUID.fromString(id))
+        if(!optionalArticle.isPresent){
+            throw ArticleNotFoundException()
+        }
+        try {
+            return optionalArticle.get().toArticleCreationResponse()
+        }catch (ex: IllegalArgumentException) {
+            throw ArticleCreationFailedException()
+        }
+
+    }
 }
 
 

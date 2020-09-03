@@ -14,4 +14,5 @@ interface ArticleService {
     fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse
     fun deleteArticle(id: String)
     fun getListOfArticlesForEachCategory(name: String, currentPage: Int): ArticleListWithPaginationResponse
+    fun getAPostById(id: String): ArticleCreationResponse
 }
