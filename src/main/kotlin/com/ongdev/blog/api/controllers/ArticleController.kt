@@ -54,7 +54,7 @@ class ArticleController @Autowired constructor(private val articleService: Artic
             = ResponseEntity(articleService.getListOfArticlesForEachCategory(name, currentPage), HttpStatus.OK)
 
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     fun getAPostById(@PathVariable(name = "id",required = true) id: String) : ResponseEntity<ArticleCreationResponse>{
         return ResponseEntity(articleService.getAPostById(id),HttpStatus.OK)
     }
