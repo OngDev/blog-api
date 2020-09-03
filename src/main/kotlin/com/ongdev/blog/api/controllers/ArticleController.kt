@@ -5,6 +5,7 @@ import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -45,4 +46,11 @@ class ArticleController @Autowired constructor(private val articleService : Arti
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @PostMapping("/{id}")
+    fun getAPostById(@PathVariable(name = "id",required = true) id: String) : ResponseEntity<Void>{
+        articleService.getAPostById(id)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
 }
