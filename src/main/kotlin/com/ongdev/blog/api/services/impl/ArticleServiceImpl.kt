@@ -7,6 +7,7 @@ import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.data.domain.Pageable
@@ -69,5 +70,10 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         }catch (ex: IllegalArgumentException){
             throw ArticleDeletingFailedException()
         }
+    }
+
+    override fun getAPostById(id: String): Article{
+        val optionalArticle = articleRepository.findById(UUID.fromString(id))
+        return optionalArticle.get()
     }
 }
