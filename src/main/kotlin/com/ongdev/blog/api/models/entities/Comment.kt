@@ -10,14 +10,12 @@ class Comment(
 		var userId: UUID? = null,
 		var content: String = "",
 
-		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "article_id")
+		@ManyToOne @JoinColumn(name = "article_id")
 		var article: Article? = null,
 
-		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "parent_id")
+		@ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "parent_id")
 		var parent: Comment? = null,
 
-		@OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL])
+		@OneToMany(mappedBy = "parent")
 		var children: Set<Comment> = HashSet()
 ) : BaseEntityAudit()

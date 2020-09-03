@@ -15,7 +15,7 @@ services:
       MYSQL_USER: blogapidevuser
       MYSQL_PASSWORD: Domaybiet!23
     ports:
-    - 3306:3306
+      - 3306:3306
 
   adminer:
     image: adminer

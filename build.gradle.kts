@@ -41,8 +41,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    compileOnly("org.springdoc","springdoc-openapi-core","1.1.49")
-    compileOnly("org.springdoc","springdoc-openapi-ui", "1.1.49")
+    compileOnly("org.springdoc", "springdoc-openapi-core", "1.1.49")
+    compileOnly("org.springdoc", "springdoc-openapi-ui", "1.1.49")
 }
 
 tasks.withType<Test> {
