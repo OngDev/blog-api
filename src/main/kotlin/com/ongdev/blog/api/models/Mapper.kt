@@ -11,7 +11,6 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         description = description,
         content = content,
         link = link,
-        name = name,
         publishDate = publishDate
 )
 
@@ -19,8 +18,6 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         id.toString(),
         title = title,
         description = description,
-        //authorId = author?.id.toString(),
-        name = name,
         content = content,
         link = link,
         publishDate = publishDate
@@ -30,8 +27,6 @@ fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
         id.toString(),
         title = title,
         description = description,
-        //authorId = author?.id.toString(),
-        name = name,
         content = content,
         link = link,
         publishDate = publishDate
@@ -40,7 +35,6 @@ fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
 fun ArticleUpdatingRequest.mapToArticle(article: Article) : Article {
     article.content = content
     article.description = description
-    article.name = name
     article.title = title
     return article
 }
