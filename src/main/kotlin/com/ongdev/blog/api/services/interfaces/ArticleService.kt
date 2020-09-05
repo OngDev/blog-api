@@ -7,6 +7,7 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationRespon
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import org.springframework.data.domain.Pageable
 
+
 interface ArticleService {
     fun createArticle(articleCreationRequest: ArticleCreationRequest) : ArticleCreationResponse
     fun getArticlesWithPaginationAndSort(pageable: Pageable) : ArticleListWithPaginationResponse
