@@ -45,4 +45,9 @@ class ArticleController @Autowired constructor(private val articleService : Arti
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("/{id}")
+    fun getAnArticle(@PathVariable(name = "id",required = true) id: String) : ResponseEntity<ArticleCreationResponse>{
+        return ResponseEntity(articleService.getAPostById(id),HttpStatus.OK)
+    }
 }
