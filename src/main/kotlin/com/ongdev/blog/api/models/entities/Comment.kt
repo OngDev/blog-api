@@ -7,17 +7,17 @@ import kotlin.collections.HashSet
 
 @Entity
 class Comment(
-		var userId: UUID? = null,
-		var content: String = "",
+        var userId: UUID? = null,
+        var content: String = "",
+        var createAt: Date? = null,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "article_id")
+        var article: Article? = null,
 
-		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "article_id")
-		var article: Article? = null,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "parent_id")
+        var parent: Comment? = null,
 
-		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "parent_id")
-		var parent: Comment? = null,
-
-		@OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL])
-		var children: Set<Comment> = HashSet()
+        @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL])
+        var children: Set<Comment>? = HashSet()
 ) : BaseEntityAudit()
