@@ -9,6 +9,6 @@ import kotlin.collections.HashSet
 
 @Entity
 class Author(
-		@OneToMany(mappedBy = "author", cascade = [CascadeType.REMOVE])
-		var articles: Set<Article> = HashSet()
+//		@OneToMany(mappedBy = "author", cascade = [CascadeType.REMOVE])
+//		var articles: Set<Article> = HashSet()
 ) : BaseEntity()

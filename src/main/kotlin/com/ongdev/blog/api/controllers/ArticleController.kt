@@ -45,4 +45,11 @@ class ArticleController @Autowired constructor(private val articleService : Arti
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("/categories/{name}/{currentPage}")
+    fun getListOfArticlesForEachCategory(
+            @PathVariable(name = "name", required = true) name: String,
+            @PathVariable(name = "currentPage", required = true) currentPage: Int
+    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+            articleService.getListOfArticlesForEachCategory(name, currentPage), HttpStatus.OK)
 }

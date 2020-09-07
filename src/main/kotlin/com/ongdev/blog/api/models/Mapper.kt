@@ -11,7 +11,8 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         description = description,
         content = content,
         link = link,
-        publishDate = publishDate
+        publishDate = publishDate,
+        categories = categories
 )
 
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
@@ -20,7 +21,8 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         description = description,
         content = content,
         link = link,
-        publishDate = publishDate
+        publishDate = publishDate,
+        nameCategories = categories.map { it.name }
 )
 
 fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(

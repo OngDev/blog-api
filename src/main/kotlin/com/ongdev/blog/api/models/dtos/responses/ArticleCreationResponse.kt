@@ -8,6 +8,6 @@ class ArticleCreationResponse(
     val description: String,
     val content: String,
     val publishDate: Date?,
-    val link: String
-	//val authorId: String
+    val link: String,
+	val nameCategories: List<String>
 )

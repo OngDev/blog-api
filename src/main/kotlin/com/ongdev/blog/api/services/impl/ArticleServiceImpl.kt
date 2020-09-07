@@ -8,20 +8,18 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.repositories.ArticleRepository
+import com.ongdev.blog.api.models.repositories.CategoryRepository
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleService {
+class ArticleServiceImpl(val articleRepository: ArticleRepository
+                         , val categoryRepository: CategoryRepository) : ArticleService {
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
         val article = articleCreationRequest.toArticleEntity()
-//        val optionalAuthor = authorRepository.findById(UUID.fromString(articleCreationRequest.authorId))
-//        if(!optionalAuthor.isPresent){
-//          throw AuthorNotFoundException()
-//        }
-//        article.author = optionalAuthor.get()
         try {
             return articleRepository.save(article).toArticleCreationResponse()
         }catch (ex: IllegalArgumentException){
@@ -68,6 +66,22 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
             return articleRepository.delete(article)
         }catch (ex: IllegalArgumentException){
             throw ArticleDeletingFailedException()
+        }
+    }
+
+    override fun getListOfArticlesForEachCategory(name: String, currentPage:Int): ArticleListWithPaginationResponse {
+        val categories = categoryRepository.findAllByName(name)
+        var getCurrentPage=0
+        if(currentPage-1>getCurrentPage)
+            getCurrentPage=currentPage-1
+        val articles = articleRepository.findAllByCategoriesIn(categories, PageRequest.of(getCurrentPage, 10))
+        if(articles.isEmpty)
+            throw IsEmptyException()
+        else{
+            val articleListResponseContent = articles.map {
+                it.toArticleCreationResponse()
+            }
+            return ArticleListWithPaginationResponse(articleListResponseContent)
         }
     }
 }
