@@ -8,6 +8,7 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -46,10 +47,10 @@ class ArticleController @Autowired constructor(private val articleService : Arti
         return ResponseEntity(HttpStatus.OK)
     }
 
-    @GetMapping("/categories/{name}/{currentPage}")
+    @GetMapping("/category/{id}")
     fun getListOfArticlesForEachCategory(
-            @PathVariable(name = "name", required = true) name: String,
-            @PathVariable(name = "currentPage", required = true) currentPage: Int
+            @PathVariable(name = "id", required = true) id: String,
+            @PageableDefault(size = 10) pageable: Pageable
     ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
-            articleService.getListOfArticlesForEachCategory(name, currentPage), HttpStatus.OK)
+            articleService.getListOfArticlesByCategory(id, pageable), HttpStatus.OK)
 }

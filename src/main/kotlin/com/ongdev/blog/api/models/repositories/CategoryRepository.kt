@@ -7,5 +7,4 @@ import java.util.*
 
 @Repository
 interface CategoryRepository : JpaRepository<Category, UUID> {
-    fun findAllByName(name: String): Set<Category>
 }

@@ -9,5 +9,5 @@ class ArticleCreationResponse(
     val content: String,
     val publishDate: Date?,
     val link: String,
-	val nameCategories: List<String>
+	val nameOfCategories: List<String>
 )

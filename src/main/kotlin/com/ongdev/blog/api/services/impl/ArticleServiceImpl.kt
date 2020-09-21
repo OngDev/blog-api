@@ -7,13 +7,15 @@ import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.entities.Article
+import com.ongdev.blog.api.models.entities.Category
 import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.repositories.CategoryRepository
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.HashSet
 
 @Service
 class ArticleServiceImpl(val articleRepository: ArticleRepository
@@ -22,18 +24,29 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
         val article = articleCreationRequest.toArticleEntity()
         try {
             return articleRepository.save(article).toArticleCreationResponse()
-        }catch (ex: IllegalArgumentException){
+        } catch (ex: IllegalArgumentException) {
             throw ArticleCreationFailedException()
         }
     }
 
-	override fun getArticlesWithPaginationAndSort(pageable: Pageable): ArticleListWithPaginationResponse {
+    override fun getArticlesWithPaginationAndSort(pageable: Pageable): ArticleListWithPaginationResponse {
+        val listCategory = HashSet<Category>()
+        listCategory.add(Category("c1", "c1", emptySet()))
+        listCategory.add(Category("c2", "c2", emptySet()))
+        listCategory.add(Category("c3", "c3", emptySet()))
+        categoryRepository.saveAll(listCategory)
+        val listArticle = ArrayList<Article>()
+        listArticle.add(0, Article("title", "", "", "", null, emptySet(), listCategory, emptySet()))
+        listArticle.add(1, Article("2", "", "", "", null, emptySet(), emptySet(), emptySet()))
+        listArticle.add(2, Article("3", "", "", "", null, emptySet(), emptySet(), emptySet()))
+        listArticle.add(3, Article("4", "", "", "", null, emptySet(), emptySet(), emptySet()))
+        articleRepository.saveAll(listArticle)
         val articles = articleRepository.findAll(pageable)
         val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()
         }
         return ArticleListWithPaginationResponse(articleListResponseContent)
-	}
+    }
 
     override fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable): ArticleListWithPaginationResponse {
         val articles = articleRepository.findAllByTitle(title, pageable)
@@ -42,46 +55,41 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository
         }
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
-    override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String) : ArticleUpdatingResponse {
+
+    override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse {
         val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if(!optionalArticle.isPresent){
+        if (!optionalArticle.isPresent) {
             throw ArticleNotFoundException()
         }
         var article = optionalArticle.get()
         article = articleUpdatingRequest.mapToArticle(article)
         try {
             return articleRepository.save(article).toArticleUpdatingResponse()
-        }catch (ex: IllegalArgumentException){
+        } catch (ex: IllegalArgumentException) {
             throw ArticleUpdatingFailedException()
         }
     }
 
-    override fun deleteArticle(id: String){
+    override fun deleteArticle(id: String) {
         val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if(!optionalArticle.isPresent){
+        if (!optionalArticle.isPresent) {
             throw ArticleNotFoundException()
         }
         val article = optionalArticle.get()
         try {
             return articleRepository.delete(article)
-        }catch (ex: IllegalArgumentException){
+        } catch (ex: IllegalArgumentException) {
             throw ArticleDeletingFailedException()
         }
     }
 
-    override fun getListOfArticlesForEachCategory(name: String, currentPage:Int): ArticleListWithPaginationResponse {
-        val categories = categoryRepository.findAllByName(name)
-        var getCurrentPage=0
-        if(currentPage-1>getCurrentPage)
-            getCurrentPage=currentPage-1
-        val articles = articleRepository.findAllByCategoriesIn(categories, PageRequest.of(getCurrentPage, 10))
+    override fun getListOfArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByCategoryId(UUID.fromString(id), pageable)
         if(articles.isEmpty)
-            throw IsEmptyException()
-        else{
-            val articleListResponseContent = articles.map {
-                it.toArticleCreationResponse()
-            }
-            return ArticleListWithPaginationResponse(articleListResponseContent)
+            throw ListOfArticlesIsEmptyException()
+        val articleListResponseContent = articles.map {
+            it.toArticleCreationResponse()
         }
+        return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 }

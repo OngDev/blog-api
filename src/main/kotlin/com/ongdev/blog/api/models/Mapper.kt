@@ -22,7 +22,7 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         content = content,
         link = link,
         publishDate = publishDate,
-        nameCategories = categories.map { it.name }
+        nameOfCategories = categories.map { it.name }
 )
 
 fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
