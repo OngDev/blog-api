@@ -52,5 +52,5 @@ class ArticleController @Autowired constructor(private val articleService : Arti
             @PathVariable(name = "id", required = true) id: String,
             @PageableDefault(size = 10) pageable: Pageable
     ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
-            articleService.getListOfArticlesByCategory(id, pageable), HttpStatus.OK)
+            articleService.getListArticlesByCategory(id, pageable), HttpStatus.OK)
 }

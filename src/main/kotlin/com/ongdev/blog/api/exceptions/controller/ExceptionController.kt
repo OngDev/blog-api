@@ -40,11 +40,11 @@ class ExceptionController {
 		)
 	}
 
-	@ExceptionHandler(value= [ListOfArticlesIsEmptyException::class])
-	fun handleListOfArticlesIsEmpty(listOfArticlesIsEmptyExceptionException: ListOfArticlesIsEmptyException)
+	@ExceptionHandler(value= [ListArticlesNotFoundException::class])
+	fun handleListOfArticlesIsEmpty(listArticlesNotFoundExceptionException: ListArticlesNotFoundException)
 			: ResponseEntity<Any> {
 		return ResponseEntity(
-				"List of articles is empty",
+				"Could not find list of articles",
 				HttpStatus.BAD_REQUEST
 		)
 	}
