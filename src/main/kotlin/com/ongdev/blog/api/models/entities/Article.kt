@@ -15,9 +15,9 @@ class Article(
 		var link: String = "", // remove letter accent and replace space with dash '-' from title
 		var publishDate: Date? = null,
 
-//		@ManyToOne(fetch = FetchType.LAZY)
-//		@JoinColumn(name = "author_id", nullable = false)
-//		var author: Author? = null,
+		@ManyToOne(fetch = FetchType.LAZY)
+		@JoinColumn(name = "author_id", nullable = false)
+		var author: Author? = null,
 
 		@JsonIgnore
 		@OneToMany(mappedBy = "article", cascade = [CascadeType.REMOVE], orphanRemoval = true)
