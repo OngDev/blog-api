@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/articles")
-class ArticleController @Autowired constructor(private val articleService : ArticleService) {
+class ArticleController(private val articleService : ArticleService) {
 
     @PostMapping
     fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest) : ResponseEntity<ArticleCreationResponse> {
@@ -48,7 +48,7 @@ class ArticleController @Autowired constructor(private val articleService : Arti
     }
 
     @GetMapping("/category/{id}")
-    fun getListOfArticlesForEachCategory(
+    fun getListArticlesForEachCategory(
             @PathVariable(name = "id", required = true) id: String,
             @PageableDefault(size = 10) pageable: Pageable
     ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(

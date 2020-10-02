@@ -51,23 +51,9 @@ class ArticleServiceTests {
 
     @Test
     fun testGetListArticlesByCategoryBadly() {
-        val category = Category("", "", emptySet())
-        category.id = UUID.randomUUID()
-        val setCategory = setOf(category)
-        val listArticle = ArrayList<Article>()
-        for (i in 0..9) {
-            listArticle.add(i, Article("", "", "", "", null
-                    , Author(), emptySet(), setCategory, emptySet()))
-        }
-        val pageable: Pageable = PageRequest.of(0, 10)
-        val pagingByCategory: Page<Article> = PageImpl<Article>(listArticle, pageable, 1)
-        val toOptional = Optional.of(pagingByCategory)
-        Mockito.`when`(articleRepository
-                .findAllArticlesByCategoryId(UUID.fromString(category.id.toString()), pageable))
-                .thenReturn(toOptional)
         articleService = ArticleServiceImpl(articleRepository)
         Assertions.assertThrows(ListArticlesNotFoundException::class.java) {
-            articleService.getListArticlesByCategory(UUID.randomUUID().toString(), pageable)
+            articleService.getListArticlesByCategory(UUID.randomUUID().toString(), PageRequest.of(0, 10))
         }
     }
 
