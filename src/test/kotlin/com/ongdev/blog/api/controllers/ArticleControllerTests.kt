@@ -17,11 +17,11 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 @WebMvcTest
 class ArticleControllerTests(@Autowired val mockMvc: MockMvc) {
@@ -50,8 +50,8 @@ class ArticleControllerTests(@Autowired val mockMvc: MockMvc) {
                 .getListArticlesByCategory(tempCategoryId, pageable))
                 .thenReturn(response)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/articles/category/$tempCategoryId").accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/articles/category/$tempCategoryId").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
 }

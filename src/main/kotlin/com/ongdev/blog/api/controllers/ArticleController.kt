@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/articles")
-class ArticleController constructor(private val articleService : ArticleService) {
+class ArticleController(private val articleService : ArticleService) {
 
     @PostMapping
     fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest) : ResponseEntity<ArticleCreationResponse> {
