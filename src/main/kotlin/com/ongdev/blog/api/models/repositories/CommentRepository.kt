@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface CommentRepository : JpaRepository<Comment, UUID> {
-    fun findByArticle(article: Article): Any
-}
+interface CommentRepository : JpaRepository<Comment, UUID>

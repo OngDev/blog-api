@@ -1,59 +1,68 @@
 package com.ongdev.blog.api.services
 
 import com.ongdev.blog.api.exceptions.ListArticlesNotFoundException
+import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.entities.Article
-import com.ongdev.blog.api.models.entities.Author
-import com.ongdev.blog.api.models.entities.Category
 import com.ongdev.blog.api.models.repositories.ArticleRepository
+import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.services.impl.ArticleServiceImpl
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import junit.framework.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito
-import org.springframework.data.domain.Page
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.*
-import kotlin.collections.ArrayList
 
-
-@ExtendWith(SpringExtension::class)
 class ArticleServiceTests {
-    private val articleRepository: ArticleRepository = Mockito.mock(ArticleRepository::class.java)
+    private val articleRepository: ArticleRepository = mock(ArticleRepository::class.java)
 
-    private lateinit var articleService: ArticleService
+    private var articleService: ArticleService = ArticleServiceImpl(articleRepository)
 
-    @Test
-    fun testGetListArticlesByCategorySuccessfully() {
-        val category = Category("", "", emptySet())
-        category.id = UUID.randomUUID()
-        val tempCategoryId = category.id.toString()
-        val setCategory = setOf(category)
-        val listArticle = ArrayList<Article>()
-        for (i in 0..9) {
-            listArticle.add(i, Article("", "", "", "", null
-                    , Author(), emptySet(), setCategory, emptySet()))
-        }
-        val pageable: Pageable = PageRequest.of(0, 10)
-        val pagingByCategory: Page<Article> = PageImpl<Article>(listArticle, pageable, 1)
-        val toOptional = Optional.of(pagingByCategory)
-        Mockito.`when`(articleRepository
-                .findAllArticlesByCategoryId(UUID.fromString(tempCategoryId), pageable))
-                .thenReturn(toOptional)
-        articleService = ArticleServiceImpl(articleRepository)
-        assertEquals("Number of stories should be 10", 10
-                , articleService.getListArticlesByCategory(tempCategoryId, pageable).result.totalElements)
+    private lateinit var mockArticleCreationRequest: ArticleCreationRequest
+    private lateinit var mockArticle: Article
+    private lateinit var mockOptionalArticle: Optional<Article>
+
+    @BeforeEach
+    internal fun setUp() {
+        mockArticleCreationRequest = ArticleCreationRequest(
+                "Test content",
+                "Test description",
+                "Test content",
+                Date(),
+                "Test link",
+                setOf()
+        )
+        mockArticle = mockArticleCreationRequest.toArticleEntity()
+        mockArticle.id = UUID.randomUUID()
+        mockOptionalArticle = Optional.of(mockArticle)
     }
 
     @Test
-    fun testGetListArticlesByCategoryBadly() {
-        articleService = ArticleServiceImpl(articleRepository)
-        Assertions.assertThrows(ListArticlesNotFoundException::class.java) {
-            articleService.getListArticlesByCategory(UUID.randomUUID().toString(), PageRequest.of(0, 10))
+    fun `Get articles, should return pagination list`() {
+        val mockListArticle = PageImpl(listOf(mockArticle))
+        `when`(
+                articleRepository.findAllArticlesByCategoryId(any(UUID::class.java), any(Pageable::class.java))
+        ).thenReturn(Optional.of(mockListArticle))
+
+        val mockRequestTOPage = PageImpl(listOf(mockArticleCreationRequest))
+        val resultPage = articleService.getListArticlesByCategory(UUID.randomUUID().toString(), PageRequest.of(0, 10))
+
+        assertThat(resultPage.result.totalElements).isEqualTo(mockRequestTOPage.size)
+    }
+
+    @Test
+    fun `Get articles, should throw error when failed to find articles`() {
+        val randomUUID = UUID.randomUUID()
+        val pageable = PageRequest.of(0, 10)
+        `when`(articleRepository.findAllArticlesByCategoryId(randomUUID, pageable))
+                .thenThrow(ListArticlesNotFoundException())
+
+        assertThrows<ListArticlesNotFoundException> {
+            articleService.getListArticlesByCategory(randomUUID.toString(), pageable)
         }
     }
 
