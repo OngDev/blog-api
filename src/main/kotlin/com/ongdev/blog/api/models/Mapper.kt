@@ -27,7 +27,6 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         publishDate = publishDate
 )
 
-
 fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
         id.toString(),
         title = title,
@@ -37,25 +36,24 @@ fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
         publishDate = publishDate
 )
 
-fun ArticleUpdatingRequest.mapToArticle(article: Article) : Article {
+fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     article.content = content
     article.description = description
     article.title = title
     return article
 }
 
-fun CategoryUpdateRequest.mapToCategory(category: Category) : Category {
+fun CategoryUpdateRequest.toCategory(category: Category): Category {
     category.name = name
     return category
 }
 
-fun Category.toCategoryCreationResponse() =  CategoryCreationResponse(
+fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
         id.toString(),
         name = name,
         link = link
 )
 
 fun CategoryCreationRequest.toCategoryEntity() = Category(
-        name = name,
-        link = link
+        name = name
 )
