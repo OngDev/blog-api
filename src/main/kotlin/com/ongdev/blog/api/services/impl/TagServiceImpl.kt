@@ -51,7 +51,7 @@ class TagServiceImpl(val tagRepository: TagRepository) : TagService {
     }
 
     override fun updateTagById(id: String, tagRequest: TagRequest): TagResponse {
-        var tag = tagRepository.findById(UUID.fromString(id)).orElseThrow{
+        val tag = tagRepository.findById(UUID.fromString(id)).orElseThrow{
             EntityNotFoundException("tag", "id", id)
         }
         tag.update(tagRequest)
@@ -63,7 +63,6 @@ class TagServiceImpl(val tagRepository: TagRepository) : TagService {
     }
 
     override fun deleteTagById(id: String) {
-        System.out.println(tagRepository.existsById(UUID.fromString(id)));
         if (tagRepository.existsById(UUID.fromString(id)).not()) {
             throw EntityNotFoundException("tag", "id", id)
         }

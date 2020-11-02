@@ -1,14 +1,13 @@
 package com.ongdev.blog.api.models
 
-import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
-import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
-import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
+import com.ongdev.blog.api.models.dtos.requests.*
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.dtos.responses.CategoryCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.TagResponse
 import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.entities.Category
+import com.ongdev.blog.api.models.entities.Tag
 import com.ongdev.blog.api.utils.AppUtils
 
 var appUtils: AppUtils = AppUtils()
@@ -46,6 +45,21 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     return article
 }
 
+fun TagRequest.toTag() = Tag(
+        name = name,
+        link = appUtils.removeAccent(name)
+)
+
+fun Tag.toTagResponse() = TagResponse(
+        id = id.toString(),
+        name = name,
+        link = link
+)
+
+fun Tag.update(tagRequest: TagRequest) {
+    name = tagRequest.name
+    link = appUtils.removeAccent(tagRequest.name)
+}
 
 fun CategoryUpdateRequest.toCategory(category: Category): Category {
     category.name = name
