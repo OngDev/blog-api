@@ -1,6 +1,9 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.*
+import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
+import com.ongdev.blog.api.exceptions.ArticleNotFoundException
+import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
+import com.ongdev.blog.api.exceptions.ListArticlesNotFoundException
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
@@ -44,11 +47,9 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
     }
 
     override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse {
-        val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if (!optionalArticle.isPresent) {
-            throw ArticleNotFoundException()
+        var article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
+            ArticleNotFoundException()
         }
-        var article = optionalArticle.get()
         article = articleUpdatingRequest.mapToArticle(article)
         try {
             return articleRepository.save(article).toArticleUpdatingResponse()
@@ -58,16 +59,10 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
     }
 
     override fun deleteArticle(id: String) {
-        val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if (!optionalArticle.isPresent) {
-            throw ArticleNotFoundException()
+        val article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
+            ArticleNotFoundException()
         }
-        val article = optionalArticle.get()
-        try {
-            return articleRepository.delete(article)
-        } catch (ex: IllegalArgumentException) {
-            throw ArticleDeletingFailedException()
-        }
+        return articleRepository.delete(article)
     }
 
     override fun getListArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse {

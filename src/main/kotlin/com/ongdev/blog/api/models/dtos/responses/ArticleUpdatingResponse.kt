@@ -9,5 +9,4 @@ class ArticleUpdatingResponse(
 		val content: String,
 		val publishDate: Date?,
 		val link: String
-		//val authorId: String
 )

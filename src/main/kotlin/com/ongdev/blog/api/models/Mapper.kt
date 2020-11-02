@@ -3,17 +3,12 @@ package com.ongdev.blog.api.models
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.requests.TagRequest
-import com.ongdev.blog.api.models.dtos.requests.CommentCreationRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.models.dtos.responses.TagResponse
-import com.ongdev.blog.api.models.dtos.responses.CommentCreationResponse
 import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.entities.Tag
 import com.ongdev.blog.api.utils.AppUtils
-
-import com.ongdev.blog.api.models.entities.Comment
-import java.util.*
 
 var appUtils: AppUtils = AppUtils()
 
@@ -22,7 +17,8 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         description = description,
         content = content,
         link = link,
-        publishDate = publishDate
+        publishDate = publishDate,
+        categories = categories
 )
 
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
@@ -31,7 +27,8 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         description = description,
         content = content,
         link = link,
-        publishDate = publishDate
+        publishDate = publishDate,
+        nameOfCategories = categories.map { it.name }
 )
 
 fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
@@ -49,8 +46,6 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     article.title = title
     return article
 }
-
-// Tag
 
 fun TagRequest.toTag() = Tag(
         name = name,
