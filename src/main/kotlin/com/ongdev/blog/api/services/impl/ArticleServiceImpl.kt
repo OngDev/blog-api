@@ -47,11 +47,9 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
     }
 
     override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse {
-        val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if (!optionalArticle.isPresent) {
+        var article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
             throw ArticleNotFoundException()
         }
-        var article = optionalArticle.get()
         article = articleUpdatingRequest.mapToArticle(article)
         try {
             return articleRepository.save(article).toArticleUpdatingResponse()
@@ -61,11 +59,9 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
     }
 
     override fun deleteArticle(id: String) {
-        val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if (!optionalArticle.isPresent) {
+        val article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
             throw ArticleNotFoundException()
         }
-        val article = optionalArticle.get()
         try {
             return articleRepository.delete(article)
         } catch (ex: IllegalArgumentException) {

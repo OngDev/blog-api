@@ -10,11 +10,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/comments")
-
+@RequestMapping("comments")
 class CommentController(private val commentService: CommentService) {
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     fun getComment(@PathVariable(name = "id", required = true) id: String): ResponseEntity<CommentCreationResponse> {
         return ResponseEntity(commentService.getComment(id), HttpStatus.OK)
     }
@@ -26,7 +25,7 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity(commentCreationResponse, HttpStatus.OK)
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     fun updateComment(
             @PathVariable(name = "id", required = true) id: String,
             @RequestBody commentUpdatingRequest: CommentUpdatingRequest
@@ -34,7 +33,7 @@ class CommentController(private val commentService: CommentService) {
             commentService.updateComment(commentUpdatingRequest, id),
             HttpStatus.OK)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     fun deleteComment(@PathVariable(name = "id", required = true) id: String): ResponseEntity<Void> {
         commentService.deleteComment(id)
         return ResponseEntity(HttpStatus.OK)

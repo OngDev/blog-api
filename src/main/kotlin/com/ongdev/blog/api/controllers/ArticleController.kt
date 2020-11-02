@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("articles")
 class ArticleController(private val articleService: ArticleService) {
 
     @PostMapping
@@ -40,7 +40,7 @@ class ArticleController(private val articleService: ArticleService) {
             articleService.updateArticle(articleUpdatingRequest, id),
             HttpStatus.OK)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     fun deleteArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<Void> {
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)

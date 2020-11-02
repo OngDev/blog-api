@@ -2,18 +2,14 @@ package com.ongdev.blog.api.models
 
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.requests.TagRequest
-import com.ongdev.blog.api.models.dtos.requests.CommentCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
+import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
-import com.ongdev.blog.api.models.dtos.responses.TagResponse
-import com.ongdev.blog.api.models.dtos.responses.CommentCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.CategoryCreationResponse
 import com.ongdev.blog.api.models.entities.Article
-import com.ongdev.blog.api.models.entities.Tag
+import com.ongdev.blog.api.models.entities.Category
 import com.ongdev.blog.api.utils.AppUtils
-
-import com.ongdev.blog.api.models.entities.Comment
-import java.util.*
 
 var appUtils: AppUtils = AppUtils()
 
@@ -50,20 +46,18 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     return article
 }
 
-// Tag
 
-fun TagRequest.toTag() = Tag(
-        name = name,
-        link = appUtils.removeAccent(name)
-)
+fun CategoryUpdateRequest.toCategory(category: Category): Category {
+    category.name = name
+    return category
+}
 
-fun Tag.toTagResponse() = TagResponse(
-        id = id.toString(),
+fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
+        id.toString(),
         name = name,
         link = link
 )
 
-fun Tag.update(tagRequest: TagRequest) {
-    name = tagRequest.name
-    link = appUtils.removeAccent(tagRequest.name)
-}
+fun CategoryCreationRequest.toCategoryEntity() = Category(
+        name = name
+)
