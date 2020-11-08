@@ -20,7 +20,7 @@ import java.util.*
 @Service
 class CategoryServiceImpl(val categoryRepository: CategoryRepository) : CategoryService {
 
-    override fun getCategoryById(id: String): CategoryCreationResponse {
+    override fun getCategory(id: String): CategoryCreationResponse {
         val category = (categoryRepository.findById(UUID.fromString(id))).orElseThrow {
             CategoryNotFoundException()
         }
