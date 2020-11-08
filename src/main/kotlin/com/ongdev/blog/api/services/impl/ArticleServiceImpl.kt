@@ -18,6 +18,7 @@ import java.util.*
 
 @Service
 class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleService {
+
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
         val article = articleCreationRequest.toArticleEntity()
         try {
