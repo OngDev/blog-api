@@ -7,7 +7,7 @@ import com.ongdev.blog.api.models.dtos.responses.CategoryListWithPaginationRespo
 import org.springframework.data.domain.Pageable
 
 interface CategoryService {
-    fun getCategoryById(id: String): CategoryCreationResponse
+    fun getCategory(id: String): CategoryCreationResponse
     fun getAllCategories(pageable: Pageable): CategoryListWithPaginationResponse
     fun createCategory(categoryCreationRequest: CategoryCreationRequest): CategoryCreationResponse
     fun updateCategory(categoryUpdateRequest: CategoryUpdateRequest, id: String): CategoryCreationResponse

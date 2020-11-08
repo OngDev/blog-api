@@ -17,7 +17,7 @@ class CategoryController(private val categoryService: CategoryService) {
 
     @GetMapping("{id}")
     fun getCategoryById(@PathVariable(name = "id", required = true) id: String): ResponseEntity<CategoryCreationResponse> {
-        val category = categoryService.getCategoryById(id)
+        val category = categoryService.getCategory(id)
         return ResponseEntity(category, HttpStatus.OK)
     }
 
