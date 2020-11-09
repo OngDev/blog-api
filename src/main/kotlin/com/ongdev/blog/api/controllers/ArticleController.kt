@@ -6,14 +6,13 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("articles")
 class ArticleController(private val articleService: ArticleService) {
 
     @PostMapping
@@ -40,9 +39,14 @@ class ArticleController(private val articleService: ArticleService) {
             articleService.updateArticle(articleUpdatingRequest, id),
             HttpStatus.OK)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     fun deleteArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<Void> {
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    @GetMapping("{id}")
+    fun getArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<ArticleCreationResponse> {
+        return ResponseEntity(articleService.getArticleById(id), HttpStatus.OK)
     }
 }
