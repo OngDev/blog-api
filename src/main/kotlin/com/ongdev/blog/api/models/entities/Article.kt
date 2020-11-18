@@ -15,7 +15,7 @@ class Article(
         var publishDate: Date? = null,
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "author_id", nullable = false)
+        @JoinColumn(name = "author_id", nullable = true)
         var author: Author? = null,
 
         @OneToMany(mappedBy = "article", cascade = [CascadeType.REMOVE], orphanRemoval = true)
