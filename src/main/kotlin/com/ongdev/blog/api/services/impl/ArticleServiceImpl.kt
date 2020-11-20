@@ -72,4 +72,15 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
             throw ArticleDeletingFailedException()
         }
     }
+
+    override fun getArticleById(id: String): ArticleCreationResponse {
+        val article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
+            throw ArticleNotFoundException()
+        }
+        try {
+            return article.toArticleCreationResponse()
+        } catch (ex: IllegalArgumentException) {
+            throw ArticleCreationFailedException()
+        }
+    }
 }
