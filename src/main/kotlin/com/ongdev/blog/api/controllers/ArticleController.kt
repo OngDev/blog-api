@@ -7,6 +7,7 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationRespon
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -44,6 +45,13 @@ class ArticleController(private val articleService: ArticleService) {
         articleService.deleteArticle(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("category/{id}")
+    fun getListArticlesForEachCategory(
+            @PathVariable(name = "id", required = true) id: String,
+            @PageableDefault(size = 10) pageable: Pageable
+    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+            articleService.getListArticlesByCategory(id, pageable), HttpStatus.OK)
 
     @GetMapping("{id}")
     fun getArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<ArticleCreationResponse> {

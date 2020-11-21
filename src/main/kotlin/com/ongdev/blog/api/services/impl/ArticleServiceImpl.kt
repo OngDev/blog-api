@@ -1,9 +1,6 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
-import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
-import com.ongdev.blog.api.exceptions.ArticleNotFoundException
-import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
+import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
@@ -21,6 +18,7 @@ import java.util.*
 
 @Service
 class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleService {
+
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
         val article = articleCreationRequest.toArticleEntity()
         try {
@@ -71,6 +69,16 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         } catch (ex: IllegalArgumentException) {
             throw ArticleDeletingFailedException()
         }
+    }
+
+    override fun getListArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByCategoryId(UUID.fromString(id), pageable).orElseThrow {
+            ListArticlesNotFoundException()
+        }
+        val articleListResponseContent = articles.map {
+            it.toArticleCreationResponse()
+        }
+        return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 
     override fun getArticleById(id: String): ArticleCreationResponse {
