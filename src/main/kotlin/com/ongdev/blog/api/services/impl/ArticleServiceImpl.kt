@@ -15,6 +15,7 @@ import com.ongdev.blog.api.models.toArticleCreationResponse
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.models.toArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*

@@ -126,4 +126,20 @@ class ArticleServiceTests {
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }
+
+    @Test
+    fun `Get Article, should return a Article by id`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalArticle)
+
+        val result = articleService.getArticleById(UUID.randomUUID().toString())
+
+        Assertions.assertThat(result.id).isEqualTo(mockArticle.id.toString())
+    }
+
+    @Test
+    fun `Get Article, should throw error when failed to find entity`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenThrow(ArticleNotFoundException())
+
+        assertThrows<ArticleNotFoundException> { articleService.getArticleById(UUID.randomUUID().toString()) }
+    }
 }
