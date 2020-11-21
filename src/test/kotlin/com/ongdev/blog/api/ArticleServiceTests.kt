@@ -1,6 +1,9 @@
 package com.ongdev.blog.api
 
-import com.ongdev.blog.api.exceptions.EntityCreationFailedException
+import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
+import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
+import com.ongdev.blog.api.exceptions.ArticleNotFoundException
+import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.entities.Article
@@ -54,6 +57,63 @@ class ArticleServiceTests {
         }
         val pagingElement: PageImpl<Article> = PageImpl(totalElement)
         mockPageArticles = Optional.of(pagingElement)
+    }
+
+    @Test
+    fun `Create Article, should return Article`() {
+        Mockito.`when`(articleRepository.save(Mockito.any(Article::class.java)))
+                .thenReturn(mockArticle)
+
+        val result = articleService.createArticle(mockArticleCreationRequest)
+
+        Assertions.assertThat(result.id).isEqualTo(mockArticle.id.toString())
+    }
+
+    @Test
+    fun `Create Article, should throw error when Article is null`() {
+        Mockito.`when`(articleRepository.save(Mockito.any(Article::class.java))).thenThrow(IllegalArgumentException())
+
+        assertThrows<ArticleCreationFailedException> { articleService.createArticle(mockArticleCreationRequest) }
+    }
+
+    @Test
+    fun `Update Article, should return updated Article`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalArticle)
+        Mockito.`when`(articleRepository.save(Mockito.any(Article::class.java))).thenReturn(mockArticle)
+
+        val result = articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString())
+
+        Assertions.assertThat(result.id).isEqualTo(mockArticle.id.toString())
+    }
+
+    @Test
+    fun `Update Article, should throw error when failed to find entity`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenThrow(ArticleNotFoundException())
+
+        assertThrows<ArticleNotFoundException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Update Article, should throw error when failed to save entity`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalArticle)
+        Mockito.`when`(articleRepository.save(Mockito.any(Article::class.java))).thenThrow(IllegalArgumentException())
+
+        assertThrows<ArticleUpdatingFailedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Delete Article, should throw error when failed to find entity`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenThrow(ArticleNotFoundException())
+
+        assertThrows<ArticleNotFoundException> { articleService.deleteArticle(UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Delete Article, should throw error when failed to delete entity`() {
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalArticle)
+        Mockito.`when`(articleRepository.delete(Mockito.any(Article::class.java))).thenThrow(IllegalArgumentException())
+
+        assertThrows<ArticleDeletingFailedException> { articleService.deleteArticle(UUID.randomUUID().toString()) }
     }
 
     @Test
