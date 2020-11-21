@@ -118,7 +118,7 @@ class ArticleServiceTests {
         val page = PageRequest.of(0, 10)
         Mockito.`when`(articleRepository.findAllArticlesByCategoryId(uuid, page))
                 .thenReturn(mockPageArticles)
-        val result = articleService.getListArticlesByCategory(uuid.toString(), page)
+        val result = articleService.getArticlesByCategory(uuid.toString(), 0)
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }
@@ -128,9 +128,9 @@ class ArticleServiceTests {
         val uuid = UUID.randomUUID()
         val page = PageRequest.of(0, 10)
         Mockito.`when`(articleRepository.findAllArticlesByCategoryId(uuid, page))
-                .thenThrow(ListArticlesNotFoundException())
+                .thenThrow(ArticlesNotFoundException())
 
-        assertThrows<ListArticlesNotFoundException> { articleService.getListArticlesByCategory(uuid.toString(), page) }
+        assertThrows<ArticlesNotFoundException> { articleService.getArticlesByCategory(uuid.toString(), 0) }
     }
 
     @Test
