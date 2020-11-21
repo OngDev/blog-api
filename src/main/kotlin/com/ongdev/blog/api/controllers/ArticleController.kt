@@ -6,7 +6,7 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,12 +22,10 @@ class ArticleController(private val articleService: ArticleService) {
     }
 
     @GetMapping
-    fun getAllArticles(
-            @RequestParam(name = "title", defaultValue = "", required = false) title: String,
-            pageable: Pageable
+    fun getAllArticles(@PageableDefault(size = 10)
+                       @RequestParam(name = "page", defaultValue = "0") page: Int
     ): ResponseEntity<ArticleListWithPaginationResponse> {
-        val articleListResponse = if (title.isEmpty()) articleService.getArticlesWithPaginationAndSort(pageable)
-        else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
+        val articleListResponse = articleService.getArticlesWithPagination(page)
         return ResponseEntity(articleListResponse, HttpStatus.OK)
     }
 

@@ -32,13 +32,13 @@ class ArticleServiceTests {
                 "Test title",
                 "Test description",
                 "Test content",
-                null,
-                "Test content"
+                "Test link"
         )
         mockArticleUpdatingRequest = ArticleUpdatingRequest(
-                "Test title",
-                "Test description",
-                "Test content"
+                "Test update title",
+                "Test update description",
+                "Test update content",
+                "Test update link"
         )
         mockArticle = mockArticleCreationRequest.toArticleEntity()
         mockArticle.id = UUID.randomUUID()
