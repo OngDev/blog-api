@@ -12,6 +12,7 @@ import com.ongdev.blog.api.models.toArticleCreationResponse
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.models.toArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
@@ -71,9 +72,9 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         }
     }
 
-    override fun getListArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse {
-        val articles = articleRepository.findAllArticlesByCategoryId(UUID.fromString(id), pageable).orElseThrow {
-            ListArticlesNotFoundException()
+    override fun getArticlesByCategory(id: String, page: Int): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByCategoryId(UUID.fromString(id), PageRequest.of(page, 10)).orElseThrow {
+            ArticlesNotFoundException()
         }
         val articleListResponseContent = articles.map {
             it.toArticleCreationResponse()

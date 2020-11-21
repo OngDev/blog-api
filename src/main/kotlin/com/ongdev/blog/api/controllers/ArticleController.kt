@@ -49,9 +49,10 @@ class ArticleController(private val articleService: ArticleService) {
     @GetMapping("category/{id}")
     fun getListArticlesForEachCategory(
             @PathVariable(name = "id", required = true) id: String,
-            @PageableDefault(size = 10) pageable: Pageable
+            @PageableDefault(size = 10)
+            @RequestParam(name = "page", defaultValue = "0") page:Int
     ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
-            articleService.getListArticlesByCategory(id, pageable), HttpStatus.OK)
+            articleService.getArticlesByCategory(id, page), HttpStatus.OK)
 
     @GetMapping("{id}")
     fun getArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<ArticleCreationResponse> {
