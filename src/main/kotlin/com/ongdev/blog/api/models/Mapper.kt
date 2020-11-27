@@ -16,8 +16,7 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         title = title,
         description = description,
         content = content,
-        link = link,
-        publishDate = publishDate
+        link = link
 )
 
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
@@ -42,6 +41,7 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     article.content = content
     article.description = description
     article.title = title
+    article.link = link
     return article
 }
 

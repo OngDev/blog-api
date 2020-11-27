@@ -13,5 +13,5 @@ interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
 	fun findAllByTitle(title: String, pageable: Pageable) : Page<Article>
 	@Query("SELECT a from Article a join a.categories ac " +
 			"where ac.id=:category_id")
-	fun findAllArticlesByCategoryId(category_id:UUID, pageable: Pageable):Optional<Page<Article>>
+	fun findAllArticlesByCategoryId(category_id:UUID, pageable: Pageable):Page<Article>
 }
