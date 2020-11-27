@@ -18,7 +18,6 @@ import java.util.*
 class ArticleServiceTests {
 
     private val articleRepository: ArticleRepository = Mockito.mock(ArticleRepository::class.java)
-
     private var articleService: ArticleService = ArticleServiceImpl(articleRepository)
 
     private lateinit var mockArticleCreationRequest: ArticleCreationRequest
