@@ -12,6 +12,7 @@ import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.entities.Category
 import com.ongdev.blog.api.models.entities.Tag
 import com.ongdev.blog.api.utils.AppUtils
+import org.springframework.data.domain.Page
 
 var appUtils: AppUtils = AppUtils()
 
@@ -78,3 +79,7 @@ fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
 fun CategoryCreationRequest.toCategoryEntity() = Category(
         name = name
 )
+
+fun Page<Category>.toPageCategoryResponse() = map {
+    it.toCategoryCreationResponse()
+}

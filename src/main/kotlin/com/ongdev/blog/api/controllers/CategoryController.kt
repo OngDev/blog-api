@@ -22,7 +22,7 @@ class CategoryController(private val categoryService: CategoryService) {
     }
 
     @GetMapping
-    fun getAllCategories(@PageableDefault(size = 10) pageable: Pageable): ResponseEntity<CategoryListWithPaginationResponse> {
+    fun getAllCategories(@PageableDefault(size = 10, page = 0) pageable: Pageable): ResponseEntity<CategoryListWithPaginationResponse> {
         val categories = categoryService.getAllCategories(pageable)
         return ResponseEntity(categories, HttpStatus.OK)
     }

@@ -76,38 +76,4 @@ class ExceptionController {
                 HttpStatus.BAD_REQUEST
         )
     }
-
-    @ExceptionHandler(value = [CategoryCreationFailedException::class])
-    fun handleCategoryCreationFailedException(categoryCreationFailedException: CategoryCreationFailedException)
-            : ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not create category",
-                HttpStatus.BAD_REQUEST
-        )
-    }
-
-    @ExceptionHandler(value = [CategoryNotFoundException::class])
-    fun handleCategoryNotFoundException(categoryNotFoundException: CategoryNotFoundException): ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not find category with id",
-                HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(value = [CategoryUpdatingFailedException::class])
-    fun handleCategoryUpdatingFailedException(categoryUpdatingFailedException: CategoryUpdatingFailedException)
-            : ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not update category",
-                HttpStatus.BAD_REQUEST
-        )
-    }
-
-    @ExceptionHandler(value = [CategoryDeletingFailedException::class])
-    fun handleCategoryDeletingFailedException(categoryDeletingFailedException: CategoryDeletingFailedException)
-            : ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not delete category",
-                HttpStatus.BAD_REQUEST
-        )
-    }
 }

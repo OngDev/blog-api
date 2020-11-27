@@ -1,9 +1,9 @@
 package com.ongdev.blog.api
 
-import com.ongdev.blog.api.exceptions.CategoryCreationFailedException
-import com.ongdev.blog.api.exceptions.CategoryDeletingFailedException
-import com.ongdev.blog.api.exceptions.CategoryNotFoundException
-import com.ongdev.blog.api.exceptions.CategoryUpdatingFailedException
+import com.ongdev.blog.api.exceptions.EntityCreationFailedException
+import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
+import com.ongdev.blog.api.exceptions.EntityNotFoundException
+import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
 import com.ongdev.blog.api.models.entities.Category
@@ -34,7 +34,7 @@ class CategoryServiceTests {
                 "Test name"
         )
         mockCategoryUpdatingRequest = CategoryUpdateRequest(
-                "Test updated name"
+                "Test update name"
         )
         mockCategory = mockCategoryCreationRequest.toCategoryEntity()
         mockCategory.id = UUID.randomUUID()
@@ -55,7 +55,7 @@ class CategoryServiceTests {
     fun `Create Category, should throw error when Category is null`() {
         Mockito.`when`(categoryRepository.save(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<CategoryCreationFailedException> { categoryService.createCategory(mockCategoryCreationRequest) }
+        assertThrows<EntityCreationFailedException> { categoryService.createCategory(mockCategoryCreationRequest) }
     }
 
     @Test
@@ -70,9 +70,9 @@ class CategoryServiceTests {
 
     @Test
     fun `Update Category, should throw error when failed to find entity`() {
-        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(CategoryNotFoundException())
+        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<CategoryNotFoundException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -80,7 +80,7 @@ class CategoryServiceTests {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
         Mockito.`when`(categoryRepository.save(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<CategoryUpdatingFailedException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityUpdatingFailedException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -94,16 +94,16 @@ class CategoryServiceTests {
 
     @Test
     fun `Get Category, should throw error when failed to find entity`() {
-        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(CategoryNotFoundException())
+        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<CategoryNotFoundException> { categoryService.getCategory(UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { categoryService.getCategory(UUID.randomUUID().toString()) }
     }
 
     @Test
     fun `Delete Category, should throw error when failed to find entity`() {
-        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(CategoryNotFoundException())
+        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<CategoryNotFoundException> { categoryService.deleteCategory(UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { categoryService.deleteCategory(UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -111,6 +111,6 @@ class CategoryServiceTests {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
         Mockito.`when`(categoryRepository.delete(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<CategoryDeletingFailedException> { categoryService.deleteCategory(UUID.randomUUID().toString()) }
+        assertThrows<EntityDeletingFailedException> { categoryService.deleteCategory(UUID.randomUUID().toString()) }
     }
 }
