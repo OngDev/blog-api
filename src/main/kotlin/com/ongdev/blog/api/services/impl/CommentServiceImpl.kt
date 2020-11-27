@@ -1,9 +1,9 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.CommentCreationFailedException
-import com.ongdev.blog.api.exceptions.CommentDeletingFailedException
-import com.ongdev.blog.api.exceptions.CommentNotFoundException
-import com.ongdev.blog.api.exceptions.CommentUpdatingFailedException
+import com.ongdev.blog.api.exceptions.EntityCreationFailedException
+import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
+import com.ongdev.blog.api.exceptions.EntityNotFoundException
+import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
 import com.ongdev.blog.api.models.*
 import com.ongdev.blog.api.models.dtos.requests.CommentCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CommentUpdatingRequest
@@ -22,13 +22,13 @@ class CommentServiceImpl(val commentRepository: CommentRepository) : CommentServ
         try {
             return commentRepository.save(comment).toCommentCreationResponse(emptyList())
         } catch (ex: IllegalArgumentException) {
-            throw CommentCreationFailedException()
+            throw EntityCreationFailedException("comment")
         }
     }
 
     override fun updateComment(CommentUpdatingRequest: CommentUpdatingRequest, id: String): CommentUpdatingResponse {
         val optionalComment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
-            throw CommentNotFoundException()
+            throw EntityNotFoundException("comment", "id", id)
         }
         val comment = CommentUpdatingRequest.toComment(optionalComment)
         val children = comment.children?.map {
@@ -37,25 +37,24 @@ class CommentServiceImpl(val commentRepository: CommentRepository) : CommentServ
         try {
             return commentRepository.save(comment).toCommentUpdatingResponse(children)
         } catch (ex: IllegalArgumentException) {
-            throw CommentUpdatingFailedException()
+            throw EntityUpdatingFailedException("comment")
         }
     }
 
     override fun deleteComment(id: String) {
         val optionalComment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
-            throw CommentNotFoundException()
+            throw EntityNotFoundException("comment", "id", id)
         }
         try {
             return commentRepository.delete(optionalComment)
-        }
-        catch (ex: IllegalArgumentException){
-            throw CommentDeletingFailedException()
+        } catch (ex: IllegalArgumentException) {
+            throw EntityDeletingFailedException("comment")
         }
     }
 
     override fun getComment(id: String): CommentCreationResponse {
         val optionalComment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
-            throw CommentNotFoundException()
+            throw EntityNotFoundException("comment", "id", id)
         }
         val children = optionalComment.children?.map {
             it.toChildCreationResponse()

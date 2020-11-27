@@ -6,6 +6,7 @@ import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,16 +23,22 @@ class ArticleController(private val articleService: ArticleService) {
     }
 
     @GetMapping
-    fun getAllArticles(@PageableDefault(size = 10)
-                       @RequestParam(name = "page", defaultValue = "0") page: Int
+    fun getAllArticles(
+            @RequestParam(name = "title"
+                    , defaultValue = ""
+                    , required = false) title: String,
+            @PageableDefault(size = 10
+                    , page = 0
+                    , sort = ["title"]) pageable: Pageable
     ): ResponseEntity<ArticleListWithPaginationResponse> {
-        val articleListResponse = articleService.getArticlesWithPagination(page)
+        val articleListResponse = if (title.isEmpty()) articleService.getArticlesWithPaginationAndSort(pageable)
+        else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
         return ResponseEntity(articleListResponse, HttpStatus.OK)
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     fun updateArticle(
-            @RequestParam(name = "id", required = true) id: String,
+            @PathVariable(name = "id", required = true) id: String,
             @RequestBody articleUpdatingRequest: ArticleUpdatingRequest
     ): ResponseEntity<ArticleUpdatingResponse> = ResponseEntity(
             articleService.updateArticle(articleUpdatingRequest, id),

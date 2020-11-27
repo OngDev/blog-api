@@ -1,9 +1,9 @@
 package com.ongdev.blog.api
 
-import com.ongdev.blog.api.exceptions.CommentCreationFailedException
-import com.ongdev.blog.api.exceptions.CommentDeletingFailedException
-import com.ongdev.blog.api.exceptions.CommentNotFoundException
-import com.ongdev.blog.api.exceptions.CommentUpdatingFailedException
+import com.ongdev.blog.api.exceptions.EntityCreationFailedException
+import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
+import com.ongdev.blog.api.exceptions.EntityNotFoundException
+import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
 import com.ongdev.blog.api.models.dtos.requests.CommentCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CommentUpdatingRequest
 import com.ongdev.blog.api.models.entities.Article
@@ -61,7 +61,7 @@ class CommentServiceTests {
     fun `Create comment, should throw error when comment is null`() {
         `when`(commentRepository.save(any(Comment::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<CommentCreationFailedException> { commentService.createComment(mockCommentCreationRequest) }
+        assertThrows<EntityCreationFailedException> { commentService.createComment(mockCommentCreationRequest) }
     }
 
     @Test
@@ -76,9 +76,10 @@ class CommentServiceTests {
 
     @Test
     fun `Update comment, should throw error when failed to find entity`() {
-        `when`(commentRepository.findById(any(UUID::class.java))).thenThrow(CommentNotFoundException())
+        val uuid = any(UUID::class.java)
+        `when`(commentRepository.findById(uuid)).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<CommentNotFoundException> { commentService.updateComment(mockCommentUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { commentService.updateComment(mockCommentUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -86,7 +87,7 @@ class CommentServiceTests {
         `when`(commentRepository.findById(any(UUID::class.java))).thenReturn(mockOptionalComment)
         `when`(commentRepository.save(any(Comment::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<CommentUpdatingFailedException> { commentService.updateComment(mockCommentUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityUpdatingFailedException> { commentService.updateComment(mockCommentUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -100,16 +101,18 @@ class CommentServiceTests {
 
     @Test
     fun `Get comment, should throw error when failed to find entity`() {
-        `when`(commentRepository.findById(any(UUID::class.java))).thenThrow(CommentNotFoundException())
+        val uuid = any(UUID::class.java)
+        `when`(commentRepository.findById(uuid)).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<CommentNotFoundException> { commentService.getComment(UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { commentService.getComment(UUID.randomUUID().toString()) }
     }
 
     @Test
     fun `Delete comment, should throw error when failed to find entity`() {
-        `when`(commentRepository.findById(any(UUID::class.java))).thenThrow(CommentNotFoundException())
+        val uuid = any(UUID::class.java)
+        `when`(commentRepository.findById(uuid)).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<CommentNotFoundException> { commentService.deleteComment(UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { commentService.deleteComment(UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -117,6 +120,6 @@ class CommentServiceTests {
         `when`(commentRepository.findById(any(UUID::class.java))).thenReturn(mockOptionalComment)
         `when`(commentRepository.delete(any(Comment::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<CommentDeletingFailedException> { commentService.deleteComment(UUID.randomUUID().toString()) }
+        assertThrows<EntityDeletingFailedException> { commentService.deleteComment(UUID.randomUUID().toString()) }
     }
 }
