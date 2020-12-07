@@ -1,5 +1,6 @@
 package com.ongdev.blog.api
 
+import com.ongdev.blog.api.exceptions.EntityCreationFailedException
 import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
 import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
 import com.ongdev.blog.api.exceptions.ArticleNotFoundException
@@ -25,6 +26,7 @@ import kotlin.collections.ArrayList
 class ArticleServiceTests {
 
     private val articleRepository: ArticleRepository = Mockito.mock(ArticleRepository::class.java)
+
     private var articleService: ArticleService = ArticleServiceImpl(articleRepository)
 
     private lateinit var mockArticleCreationRequest: ArticleCreationRequest
@@ -124,21 +126,5 @@ class ArticleServiceTests {
         val result = articleService.getArticlesByCategory(uuid.toString(), page)
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
-    }
-
-    @Test
-    fun `Get Article, should return a Article by id`() {
-        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalArticle)
-
-        val result = articleService.getArticleById(UUID.randomUUID().toString())
-
-        Assertions.assertThat(result.id).isEqualTo(mockArticle.id.toString())
-    }
-
-    @Test
-    fun `Get Article, should throw error when failed to find entity`() {
-        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenThrow(ArticleNotFoundException())
-
-        assertThrows<ArticleNotFoundException> { articleService.getArticleById(UUID.randomUUID().toString()) }
     }
 }
