@@ -3,12 +3,16 @@ package com.ongdev.blog.api.models
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.requests.TagRequest
+import com.ongdev.blog.api.models.dtos.requests.*
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.CategoryCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.TagResponse
 import com.ongdev.blog.api.models.entities.Article
+import com.ongdev.blog.api.models.entities.Category
 import com.ongdev.blog.api.models.entities.Tag
 import com.ongdev.blog.api.utils.AppUtils
+import org.springframework.data.domain.Page
 
 var appUtils: AppUtils = AppUtils()
 
@@ -59,4 +63,23 @@ fun Tag.toTagResponse() = TagResponse(
 fun Tag.update(tagRequest: TagRequest) {
     name = tagRequest.name
     link = appUtils.removeAccent(tagRequest.name)
+}
+
+fun CategoryUpdateRequest.toCategory(category: Category): Category {
+    category.name = name
+    return category
+}
+
+fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
+        id.toString(),
+        name = name,
+        link = link
+)
+
+fun CategoryCreationRequest.toCategoryEntity() = Category(
+        name = name
+)
+
+fun Page<Category>.toPageCategoryResponse() = map {
+    it.toCategoryCreationResponse()
 }
