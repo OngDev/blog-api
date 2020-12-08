@@ -43,8 +43,8 @@ class ExceptionController {
                 HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(value = [LinkIsExistedException::class])
-    fun handleLinkIsExistedException(exception: LinkIsExistedException)
+    @ExceptionHandler(value = [EntityIsExistedException::class])
+    fun handleEntityIsExistedException(exception: EntityIsExistedException)
             : ResponseEntity<Any> {
         return ResponseEntity(
                 "${exception.entityName} with ${exception.key}: ${exception.value} is existed",

@@ -50,6 +50,15 @@ class ArticleController(private val articleService: ArticleService) {
         return ResponseEntity(HttpStatus.OK)
     }
 
+    @GetMapping("category/{id}")
+    fun getArticlesByCategory(
+            @PathVariable(name = "id", required = true) id: String,
+            @PageableDefault(size = 10
+                    , page = 0
+                    , sort = ["title"]) pageable: Pageable
+    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+            articleService.getArticlesByCategory(id, pageable), HttpStatus.OK)
+
     @GetMapping("{id}")
     fun getArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<ArticleCreationResponse> {
         return ResponseEntity(articleService.getArticleById(id), HttpStatus.OK)
