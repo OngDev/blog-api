@@ -30,7 +30,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
                 throw EntityCreationFailedException("article")
             }
         } else {
-            throw LinkIsExistedException("article", "link", articleCreationRequest.link)
+            throw EntityIsExistedException("article", "link", articleCreationRequest.link)
         }
     }
 
@@ -63,7 +63,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
                 throw EntityUpdatingFailedException("article")
             }
         } else {
-            throw LinkIsExistedException("article", "link", articleUpdatingRequest.link)
+            throw EntityIsExistedException("article", "link", articleUpdatingRequest.link)
         }
     }
 
@@ -76,6 +76,14 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         } catch (ex: IllegalArgumentException) {
             throw EntityDeletingFailedException("article")
         }
+    }
+
+    override fun getArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByCategoryId(UUID.fromString(id), pageable)
+        val articleListResponseContent = articles.map {
+            it.toArticleCreationResponse()
+        }
+        return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 
     override fun getArticleById(id: String): ArticleCreationResponse {

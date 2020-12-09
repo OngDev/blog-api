@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ArticleServiceTests {
 
@@ -91,9 +92,9 @@ class ArticleServiceTests {
 
     @Test
     fun `Create Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.findByLink("Test link")).thenThrow(LinkIsExistedException::class.java)
+        Mockito.`when`(articleRepository.findByLink("Test link")).thenThrow(EntityIsExistedException::class.java)
 
-        assertThrows<LinkIsExistedException> { articleService.createArticle(mockArticleCreationRequest) }
+        assertThrows<EntityIsExistedException> { articleService.createArticle(mockArticleCreationRequest) }
     }
 
     @Test
@@ -124,9 +125,9 @@ class ArticleServiceTests {
 
     @Test
     fun `Update Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.findByLink("Test update link")).thenThrow(LinkIsExistedException::class.java)
+        Mockito.`when`(articleRepository.findByLink("Test update link")).thenThrow(EntityIsExistedException::class.java)
 
-        assertThrows<LinkIsExistedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityIsExistedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -160,6 +161,16 @@ class ArticleServiceTests {
         Mockito.`when`(articleRepository.findAllByTitle("Test title", page))
                 .thenReturn(mockPageArticles.get())
         val result = articleService.getArticlesByTitleWithPaginationAndSort("Test title", page)
+
+        Assertions.assertThat(result.result.totalElements).isEqualTo(10)
+    }
+    @Test
+    fun `Get Articles By Category, should return Articles`() {
+        val uuid = UUID.randomUUID()
+        val page = PageRequest.of(0, 10)
+        Mockito.`when`(articleRepository.findAllArticlesByCategoryId(uuid, page))
+                .thenReturn(mockPageArticles.get())
+        val result = articleService.getArticlesByCategory(uuid.toString(), page)
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }
