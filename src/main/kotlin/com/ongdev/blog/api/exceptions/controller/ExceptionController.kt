@@ -15,22 +15,6 @@ class ExceptionController {
                 HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(value = [ArticleCreationFailedException::class])
-    fun handleArticleCreationFailedException(articleCreationFailedException: ArticleCreationFailedException)
-            : ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not create article",
-                HttpStatus.BAD_REQUEST
-        )
-    }
-
-    @ExceptionHandler(value = [ArticleNotFoundException::class])
-    fun handleArticleNotFoundException(articleNotFoundException: ArticleNotFoundException): ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not find article with id",
-                HttpStatus.NOT_FOUND)
-    }
-
     @ExceptionHandler(value = [EntityCreationFailedException::class])
     fun handleCreationFailedException(exception: EntityCreationFailedException): ResponseEntity<Any> {
         return ResponseEntity(
@@ -59,20 +43,11 @@ class ExceptionController {
                 HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(value = [ArticleUpdatingFailedException::class])
-    fun handleArticleUpdatingFailedException(articleUpdatingFailedException: ArticleUpdatingFailedException)
+    @ExceptionHandler(value = [LinkIsExistedException::class])
+    fun handleLinkIsExistedException(exception: LinkIsExistedException)
             : ResponseEntity<Any> {
         return ResponseEntity(
-                "Could not update article",
-                HttpStatus.BAD_REQUEST
-        )
-    }
-
-    @ExceptionHandler(value = [ArticleDeletingFailedException::class])
-    fun handleArticleDeletingFailedException(articleDeletingFailedException: ArticleDeletingFailedException)
-            : ResponseEntity<Any> {
-        return ResponseEntity(
-                "Could not delete article",
+                "${exception.entityName} with ${exception.key}: ${exception.value} is existed",
                 HttpStatus.BAD_REQUEST
         )
     }

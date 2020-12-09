@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface CommentRepository : JpaRepository<Comment, UUID> {
-}
+interface CommentRepository : JpaRepository<Comment, UUID>

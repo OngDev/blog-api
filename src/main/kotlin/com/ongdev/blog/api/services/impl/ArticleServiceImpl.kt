@@ -1,9 +1,6 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.ArticleCreationFailedException
-import com.ongdev.blog.api.exceptions.ArticleDeletingFailedException
-import com.ongdev.blog.api.exceptions.ArticleNotFoundException
-import com.ongdev.blog.api.exceptions.ArticleUpdatingFailedException
+import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
@@ -21,12 +18,19 @@ import java.util.*
 
 @Service
 class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleService {
+
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
-        val article = articleCreationRequest.toArticleEntity()
-        try {
-            return articleRepository.save(article).toArticleCreationResponse()
-        } catch (ex: IllegalArgumentException) {
-            throw ArticleCreationFailedException()
+        val optionalArticleByLink = articleRepository.findByLink(articleCreationRequest.link)
+        if (!optionalArticleByLink.isPresent) {
+            val article = articleCreationRequest.toArticleEntity()
+            article.publishDate = Date()
+            try {
+                return articleRepository.save(article).toArticleCreationResponse()
+            } catch (ex: IllegalArgumentException) {
+                throw EntityCreationFailedException("article")
+            }
+        } else {
+            throw LinkIsExistedException("article", "link", articleCreationRequest.link)
         }
     }
 
@@ -47,40 +51,41 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
     }
 
     override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse {
-        val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if (!optionalArticle.isPresent) {
-            throw ArticleNotFoundException()
-        }
-        var article = optionalArticle.get()
-        article = articleUpdatingRequest.mapToArticle(article)
-        try {
-            return articleRepository.save(article).toArticleUpdatingResponse()
-        } catch (ex: IllegalArgumentException) {
-            throw ArticleUpdatingFailedException()
+        val optionalArticleByLink = articleRepository.findByLink(articleUpdatingRequest.link)
+        if (!optionalArticleByLink.isPresent) {
+            var article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
+                EntityNotFoundException("article", "id", id)
+            }
+            article = articleUpdatingRequest.mapToArticle(article)
+            try {
+                return articleRepository.save(article).toArticleUpdatingResponse()
+            } catch (ex: IllegalArgumentException) {
+                throw EntityUpdatingFailedException("article")
+            }
+        } else {
+            throw LinkIsExistedException("article", "link", articleUpdatingRequest.link)
         }
     }
 
     override fun deleteArticle(id: String) {
-        val optionalArticle = articleRepository.findById(UUID.fromString(id))
-        if (!optionalArticle.isPresent) {
-            throw ArticleNotFoundException()
+        val article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
+            throw EntityNotFoundException("article", "id", id)
         }
-        val article = optionalArticle.get()
         try {
             return articleRepository.delete(article)
         } catch (ex: IllegalArgumentException) {
-            throw ArticleDeletingFailedException()
+            throw EntityDeletingFailedException("article")
         }
     }
 
     override fun getArticleById(id: String): ArticleCreationResponse {
         val article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
-            throw ArticleNotFoundException()
+            throw EntityNotFoundException("article", "id", id)
         }
         try {
             return article.toArticleCreationResponse()
         } catch (ex: IllegalArgumentException) {
-            throw ArticleCreationFailedException()
+            throw EntityCreationFailedException("article")
         }
     }
 }
