@@ -27,39 +27,34 @@ class CommentServiceImpl(val commentRepository: CommentRepository) : CommentServ
     }
 
     override fun updateComment(CommentUpdatingRequest: CommentUpdatingRequest, id: String): CommentUpdatingResponse {
-        val optionalComment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
+        val comment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
             throw EntityNotFoundException("comment", "id", id)
         }
-        val comment = CommentUpdatingRequest.toComment(optionalComment)
-        val children = comment.children?.map {
-            it.toChildCreationResponse()
-        }
+        val updateComment = CommentUpdatingRequest.toComment(comment)
+        val children = updateComment.children?.toChildrenResponse()
         try {
-            return commentRepository.save(comment).toCommentUpdatingResponse(children)
+            return commentRepository.save(updateComment).toCommentUpdatingResponse(children)
         } catch (ex: IllegalArgumentException) {
             throw EntityUpdatingFailedException("comment")
         }
     }
 
     override fun deleteComment(id: String) {
-        val optionalComment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
+        val comment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
             throw EntityNotFoundException("comment", "id", id)
         }
         try {
-            return commentRepository.delete(optionalComment)
+            return commentRepository.delete(comment)
         } catch (ex: IllegalArgumentException) {
             throw EntityDeletingFailedException("comment")
         }
     }
 
     override fun getComment(id: String): CommentCreationResponse {
-        val optionalComment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
+        val comment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
             throw EntityNotFoundException("comment", "id", id)
         }
-        val children = optionalComment.children?.map {
-            it.toChildCreationResponse()
-        }
-        return optionalComment.toCommentCreationResponse(children)
+        val children = comment.children?.toChildrenResponse()
+        return comment.toCommentCreationResponse(children)
     }
-
 }
