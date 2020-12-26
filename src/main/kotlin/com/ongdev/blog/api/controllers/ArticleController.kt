@@ -72,4 +72,13 @@ class ArticleController(private val articleService: ArticleService) {
                     , sort = ["title"]) pageable: Pageable
     ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
             articleService.getArticlesByTagId(id, pageable), HttpStatus.OK)
+
+    @GetMapping("tag")
+    fun getArticlesByTagLink(
+            @RequestParam(name = "link", required = true) link: String,
+            @PageableDefault(size = 10
+                    , page = 0
+                    , sort = ["title"]) pageable: Pageable
+    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+            articleService.getArticlesByTagLink(link, pageable), HttpStatus.OK)
 }

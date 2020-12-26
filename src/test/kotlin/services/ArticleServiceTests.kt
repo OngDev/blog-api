@@ -8,6 +8,7 @@ import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.services.impl.ArticleServiceImpl
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import net.bytebuddy.utility.RandomString
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -176,12 +177,22 @@ class ArticleServiceTests {
     }
 
     @Test
-    fun `Get Articles By Tag, should return Articles`() {
+    fun `Get Articles By Tag Id, should return Articles`() {
         val uuid = UUID.randomUUID()
         val page = PageRequest.of(0, 10)
         Mockito.`when`(articleRepository.findAllArticlesByTagId(uuid, page))
                 .thenReturn(mockPageArticles.get())
         val result = articleService.getArticlesByTagId(uuid.toString(), page)
+
+        Assertions.assertThat(result.result.totalElements).isEqualTo(10)
+    }
+
+    @Test
+    fun `Get Articles By Tag Link, should return Articles`() {
+        val page = PageRequest.of(0, 10)
+        Mockito.`when`(articleRepository.findAllArticlesByTagLink("Test link", page))
+                .thenReturn(mockPageArticles.get())
+        val result = articleService.getArticlesByTagLink("Test link", page)
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }

@@ -91,4 +91,10 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         val articleListResponseContent = articles.toPageArticleResponse()
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
+
+    override fun getArticlesByTagLink(link: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByTagLink(link, pageable)
+        val articleListResponseContent = articles.toPageArticleResponse()
+        return ArticleListWithPaginationResponse(articleListResponseContent)
+    }
 }
