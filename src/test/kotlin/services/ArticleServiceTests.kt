@@ -1,4 +1,4 @@
-package com.ongdev.blog.api
+package services
 
 import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
@@ -8,6 +8,7 @@ import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.services.impl.ArticleServiceImpl
 import com.ongdev.blog.api.services.interfaces.ArticleService
+import net.bytebuddy.utility.RandomString
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -92,7 +93,7 @@ class ArticleServiceTests {
 
     @Test
     fun `Create Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.findByLink("Test link")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(articleRepository.existsByLink("Test link")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { articleService.createArticle(mockArticleCreationRequest) }
     }
@@ -122,10 +123,9 @@ class ArticleServiceTests {
         assertThrows<EntityUpdatingFailedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
-
     @Test
     fun `Update Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.findByLink("Test update link")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(articleRepository.existsByLink("Test update link")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
     }
@@ -164,6 +164,7 @@ class ArticleServiceTests {
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }
+
     @Test
     fun `Get Articles By Category, should return Articles`() {
         val uuid = UUID.randomUUID()
@@ -171,6 +172,27 @@ class ArticleServiceTests {
         Mockito.`when`(articleRepository.findAllArticlesByCategoryId(uuid, page))
                 .thenReturn(mockPageArticles.get())
         val result = articleService.getArticlesByCategory(uuid.toString(), page)
+
+        Assertions.assertThat(result.result.totalElements).isEqualTo(10)
+    }
+
+    @Test
+    fun `Get Articles By Tag Id, should return Articles`() {
+        val uuid = UUID.randomUUID()
+        val page = PageRequest.of(0, 10)
+        Mockito.`when`(articleRepository.findAllArticlesByTagId(uuid, page))
+                .thenReturn(mockPageArticles.get())
+        val result = articleService.getArticlesByTagId(uuid.toString(), page)
+
+        Assertions.assertThat(result.result.totalElements).isEqualTo(10)
+    }
+
+    @Test
+    fun `Get Articles By Tag Link, should return Articles`() {
+        val page = PageRequest.of(0, 10)
+        Mockito.`when`(articleRepository.findAllArticlesByTagLink("Test link", page))
+                .thenReturn(mockPageArticles.get())
+        val result = articleService.getArticlesByTagLink("Test link", page)
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }

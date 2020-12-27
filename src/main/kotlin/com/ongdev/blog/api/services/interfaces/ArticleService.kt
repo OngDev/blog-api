@@ -15,4 +15,6 @@ interface ArticleService {
     fun deleteArticle(id: String)
     fun getArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse
     fun getArticleById(id: String): ArticleCreationResponse
+    fun getArticlesByTagId(id: String, pageable: Pageable): ArticleListWithPaginationResponse
+    fun getArticlesByTagLink(link: String, pageable: Pageable): ArticleListWithPaginationResponse
 }

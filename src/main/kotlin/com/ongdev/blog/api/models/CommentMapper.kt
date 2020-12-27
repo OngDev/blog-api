@@ -43,3 +43,7 @@ fun CommentUpdatingRequest.toComment(comment: Comment): Comment {
     comment.createAt = createAt
     return comment
 }
+
+fun Set<Comment>.toChildrenResponse() = map {
+    it.toChildCreationResponse()
+}

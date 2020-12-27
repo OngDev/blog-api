@@ -11,8 +11,15 @@ import java.util.*
 @Repository
 interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
     fun findAllByTitle(title: String, pageable: Pageable): Page<Article>
-    fun findByLink(link: String): Optional<Article>
-	@Query("SELECT a from Article a join a.categories ac " +
-			"where ac.id=:category_id")
+
+    fun existsByLink(link: String):Boolean
+
+	@Query("SELECT a from Article a join a.categories ac on ac.id=:category_id")
 	fun findAllArticlesByCategoryId(category_id:UUID, pageable: Pageable):Page<Article>
+
+	@Query("SELECT a from Article a join a.tags at on at.id=:tag_id")
+	fun findAllArticlesByTagId(tag_id:UUID, pageable: Pageable):Page<Article>
+
+	@Query("SELECT a from Article a join a.tags at on at.link=:tag_link")
+	fun findAllArticlesByTagLink(tag_link:String, pageable: Pageable):Page<Article>
 }

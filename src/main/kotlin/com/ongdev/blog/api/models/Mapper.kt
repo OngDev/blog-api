@@ -49,6 +49,10 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     return article
 }
 
+fun Page<Article>.toPageArticleResponse() = map {
+    it.toArticleCreationResponse()
+}
+
 fun TagRequest.toTag() = Tag(
         name = name,
         link = appUtils.removeAccent(name)
@@ -63,6 +67,9 @@ fun Tag.toTagResponse() = TagResponse(
 fun Tag.update(tagRequest: TagRequest) {
     name = tagRequest.name
     link = appUtils.removeAccent(tagRequest.name)
+}
+fun Page<Tag>.toTagsResponse() = map{
+    it.toTagResponse()
 }
 
 fun CategoryUpdateRequest.toCategory(category: Category): Category {

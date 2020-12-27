@@ -1,4 +1,4 @@
-package com.ongdev.blog.api
+package services
 
 import com.ongdev.blog.api.exceptions.EntityCreationFailedException
 import com.ongdev.blog.api.exceptions.EntityDeletingFailedException

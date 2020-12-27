@@ -1,16 +1,13 @@
 package com.ongdev.blog.api.services.impl
 
 import com.ongdev.blog.api.exceptions.*
+import com.ongdev.blog.api.models.*
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
 import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
-import com.ongdev.blog.api.models.mapToArticle
 import com.ongdev.blog.api.models.repositories.ArticleRepository
-import com.ongdev.blog.api.models.toArticleCreationResponse
-import com.ongdev.blog.api.models.toArticleEntity
-import com.ongdev.blog.api.models.toArticleUpdatingResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -20,8 +17,7 @@ import java.util.*
 class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleService {
 
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
-        val optionalArticleByLink = articleRepository.findByLink(articleCreationRequest.link)
-        if (!optionalArticleByLink.isPresent) {
+        if (articleRepository.existsByLink(articleCreationRequest.link).not()) {
             val article = articleCreationRequest.toArticleEntity()
             article.publishDate = Date()
             try {
@@ -36,23 +32,18 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
 
     override fun getArticlesWithPaginationAndSort(pageable: Pageable): ArticleListWithPaginationResponse {
         val articles = articleRepository.findAll(pageable)
-        val articleListResponseContent = articles.map {
-            it.toArticleCreationResponse()
-        }
+        val articleListResponseContent = articles.toPageArticleResponse()
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 
     override fun getArticlesByTitleWithPaginationAndSort(title: String, pageable: Pageable): ArticleListWithPaginationResponse {
         val articles = articleRepository.findAllByTitle(title, pageable)
-        val articleListResponseContent = articles.map {
-            it.toArticleCreationResponse()
-        }
+        val articleListResponseContent = articles.toPageArticleResponse()
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 
     override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse {
-        val optionalArticleByLink = articleRepository.findByLink(articleUpdatingRequest.link)
-        if (!optionalArticleByLink.isPresent) {
+        if (articleRepository.existsByLink(articleUpdatingRequest.link).not()) {
             var article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
                 EntityNotFoundException("article", "id", id)
             }
@@ -80,9 +71,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
 
     override fun getArticlesByCategory(id: String, pageable: Pageable): ArticleListWithPaginationResponse {
         val articles = articleRepository.findAllArticlesByCategoryId(UUID.fromString(id), pageable)
-        val articleListResponseContent = articles.map {
-            it.toArticleCreationResponse()
-        }
+        val articleListResponseContent = articles.toPageArticleResponse()
         return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 
@@ -95,5 +84,17 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
         } catch (ex: IllegalArgumentException) {
             throw EntityCreationFailedException("article")
         }
+    }
+
+    override fun getArticlesByTagId(id: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByTagId(UUID.fromString(id), pageable)
+        val articleListResponseContent = articles.toPageArticleResponse()
+        return ArticleListWithPaginationResponse(articleListResponseContent)
+    }
+
+    override fun getArticlesByTagLink(link: String, pageable: Pageable): ArticleListWithPaginationResponse {
+        val articles = articleRepository.findAllArticlesByTagLink(link, pageable)
+        val articleListResponseContent = articles.toPageArticleResponse()
+        return ArticleListWithPaginationResponse(articleListResponseContent)
     }
 }
