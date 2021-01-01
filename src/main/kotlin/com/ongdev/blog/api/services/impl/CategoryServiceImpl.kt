@@ -69,4 +69,9 @@ class CategoryServiceImpl(val categoryRepository: CategoryRepository) : Category
             throw EntityDeletingFailedException("category")
         }
     }
+    override fun getCategoriesByLink(link: String, pageable: Pageable): CategoryListWithPaginationResponse {
+        val categories = categoryRepository.findAllByLink(link, pageable)
+        val pageCategoryResponse = categories.toPageCategoryResponse()
+        return CategoryListWithPaginationResponse(pageCategoryResponse)
+    }
 }

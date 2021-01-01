@@ -44,4 +44,11 @@ class CategoryController(private val categoryService: CategoryService) {
         categoryService.deleteCategoryById(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("link/{link}")
+    fun getCategoriesByLink(@PathVariable(name = "link", required = true) link: String
+                            , @PageableDefault(size = 10, page = 0) pageable: Pageable): ResponseEntity<CategoryListWithPaginationResponse> {
+        val categories = categoryService.getCategoriesByLink(link, pageable)
+        return ResponseEntity(categories, HttpStatus.OK)
+    }
 }
