@@ -16,4 +16,5 @@ interface ArticleService {
     fun getArticleById(id: String): ArticleResponse
     fun getArticlesByTagId(id: String, pageable: Pageable): ArticlesWithPaginationResponse
     fun getArticlesByTagLink(link: String, pageable: Pageable): ArticlesWithPaginationResponse
+    fun getArticlesByLink(link: String, pageable: Pageable): ArticlesWithPaginationResponse
 }

@@ -194,4 +194,14 @@ class ArticleServiceTests {
 
         Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }
+
+    @Test
+    fun `Get Articles By Link, should return Articles`() {
+        val page = PageRequest.of(0, 10)
+        Mockito.`when`(articleRepository.findAllByLink("Test link", page))
+                .thenReturn(mockPageArticles.get())
+        val result = articleService.getArticlesByLink("Test link", page)
+
+        Assertions.assertThat(result.result.totalElements).isEqualTo(10)
+    }
 }
