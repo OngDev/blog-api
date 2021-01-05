@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface CategoryRepository : JpaRepository<Category, UUID>
+interface CategoryRepository : JpaRepository<Category, UUID>{
+    fun existsByName(name: String):Boolean
+}

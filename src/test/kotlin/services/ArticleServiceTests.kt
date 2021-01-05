@@ -37,14 +37,12 @@ class ArticleServiceTests {
         mockArticleCreationRequest = ArticleCreationRequest(
                 "Test title",
                 "Test description",
-                "Test content",
-                "Test link"
+                "Test content"
         )
         mockArticleUpdatingRequest = ArticleUpdatingRequest(
                 "Test update title",
                 "Test update description",
-                "Test update content",
-                "Test update link"
+                "Test update content"
         )
         mockArticle = mockArticleCreationRequest.toArticleEntity()
         mockArticle.id = UUID.randomUUID()
@@ -93,7 +91,7 @@ class ArticleServiceTests {
 
     @Test
     fun `Create Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.existsByLink("Test link")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(articleRepository.existsByTitle("Test title")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { articleService.createArticle(mockArticleCreationRequest) }
     }
@@ -125,7 +123,7 @@ class ArticleServiceTests {
 
     @Test
     fun `Update Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.existsByLink("Test update link")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(articleRepository.existsByTitle("Test update title")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
     }

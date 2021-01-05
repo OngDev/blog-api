@@ -1,9 +1,6 @@
 package com.ongdev.blog.api.services.impl
 
-import com.ongdev.blog.api.exceptions.EntityCreationFailedException
-import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
-import com.ongdev.blog.api.exceptions.EntityNotFoundException
-import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
+import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
 import com.ongdev.blog.api.models.dtos.responses.CategoryCreationResponse
@@ -35,23 +32,31 @@ class CategoryServiceImpl(val categoryRepository: CategoryRepository) : Category
     }
 
     override fun createCategory(categoryCreationRequest: CategoryCreationRequest): CategoryCreationResponse {
-        val category = categoryCreationRequest.toCategoryEntity()
-        try {
-            return categoryRepository.save(category).toCategoryCreationResponse()
-        } catch (ex: IllegalArgumentException) {
-            throw EntityCreationFailedException("category")
+        if (categoryRepository.existsByName(categoryCreationRequest.name).not()) {
+            val category = categoryCreationRequest.toCategoryEntity()
+            try {
+                return categoryRepository.save(category).toCategoryCreationResponse()
+            } catch (ex: IllegalArgumentException) {
+                throw EntityCreationFailedException("category")
+            }
+        } else {
+            throw EntityIsExistedException("category", "name", categoryCreationRequest.name)
         }
     }
 
     override fun updateCategory(categoryUpdateRequest: CategoryUpdateRequest, id: String): CategoryCreationResponse {
-        var category = categoryRepository.findById(UUID.fromString(id)).orElseThrow {
-            EntityNotFoundException("category", "id", id)
-        }
-        category = categoryUpdateRequest.toCategory(category)
-        try {
-            return categoryRepository.save(category).toCategoryCreationResponse()
-        } catch (ex: IllegalArgumentException) {
-            throw EntityUpdatingFailedException("category")
+        if (categoryRepository.existsByName(categoryUpdateRequest.name).not()) {
+            var category = categoryRepository.findById(UUID.fromString(id)).orElseThrow {
+                EntityNotFoundException("category", "id", id)
+            }
+            category = categoryUpdateRequest.toCategory(category)
+            try {
+                return categoryRepository.save(category).toCategoryCreationResponse()
+            } catch (ex: IllegalArgumentException) {
+                throw EntityUpdatingFailedException("category")
+            }
+        } else {
+            throw EntityIsExistedException("category", "name", categoryUpdateRequest.name)
         }
     }
 

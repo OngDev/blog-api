@@ -20,7 +20,7 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         title = title,
         description = description,
         content = content,
-        link = link
+        link = appUtils.removeAccent(title)
 )
 
 fun Article.toArticleCreationResponse() = ArticleCreationResponse(
@@ -45,7 +45,7 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
     article.content = content
     article.description = description
     article.title = title
-    article.link = link
+    article.link = appUtils.removeAccent(title)
     return article
 }
 
@@ -68,6 +68,7 @@ fun Tag.update(tagRequest: TagRequest) {
     name = tagRequest.name
     link = appUtils.removeAccent(tagRequest.name)
 }
+
 fun Page<Tag>.toTagsResponse() = map{
     it.toTagResponse()
 }
@@ -80,11 +81,12 @@ fun CategoryUpdateRequest.toCategory(category: Category): Category {
 fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
         id.toString(),
         name = name,
-        link = link
+        link = appUtils.removeAccent(name)
 )
 
 fun CategoryCreationRequest.toCategoryEntity() = Category(
-        name = name
+        name = name,
+        link = appUtils.removeAccent(name)
 )
 
 fun Page<Category>.toPageCategoryResponse() = map {

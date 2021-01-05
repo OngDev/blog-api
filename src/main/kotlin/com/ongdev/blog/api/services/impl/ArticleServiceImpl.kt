@@ -17,7 +17,7 @@ import java.util.*
 class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleService {
 
     override fun createArticle(articleCreationRequest: ArticleCreationRequest): ArticleCreationResponse {
-        if (articleRepository.existsByLink(articleCreationRequest.link).not()) {
+        if (articleRepository.existsByTitle(articleCreationRequest.title).not()) {
             val article = articleCreationRequest.toArticleEntity()
             article.publishDate = Date()
             try {
@@ -26,7 +26,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
                 throw EntityCreationFailedException("article")
             }
         } else {
-            throw EntityIsExistedException("article", "link", articleCreationRequest.link)
+            throw EntityIsExistedException("article", "title", articleCreationRequest.title)
         }
     }
 
@@ -43,7 +43,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
     }
 
     override fun updateArticle(articleUpdatingRequest: ArticleUpdatingRequest, id: String): ArticleUpdatingResponse {
-        if (articleRepository.existsByLink(articleUpdatingRequest.link).not()) {
+        if (articleRepository.existsByTitle(articleUpdatingRequest.title).not()) {
             var article = articleRepository.findById(UUID.fromString(id)).orElseThrow {
                 EntityNotFoundException("article", "id", id)
             }
@@ -54,7 +54,7 @@ class ArticleServiceImpl(val articleRepository: ArticleRepository) : ArticleServ
                 throw EntityUpdatingFailedException("article")
             }
         } else {
-            throw EntityIsExistedException("article", "link", articleUpdatingRequest.link)
+            throw EntityIsExistedException("article", "title", articleUpdatingRequest.title)
         }
     }
 

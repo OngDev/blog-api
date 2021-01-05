@@ -1,9 +1,6 @@
 package services
 
-import com.ongdev.blog.api.exceptions.EntityCreationFailedException
-import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
-import com.ongdev.blog.api.exceptions.EntityNotFoundException
-import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
+import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
 import com.ongdev.blog.api.models.entities.Category
@@ -52,10 +49,17 @@ class CategoryServiceTests {
     }
 
     @Test
-    fun `Create Category, should throw error when Category is null`() {
+    fun `Create Category, should throw error when could not save`() {
         Mockito.`when`(categoryRepository.save(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
         assertThrows<EntityCreationFailedException> { categoryService.createCategory(mockCategoryCreationRequest) }
+    }
+
+    @Test
+    fun `Create Category, should throw error when link is existed`() {
+        Mockito.`when`(categoryRepository.existsByName("Test name")).thenThrow(EntityIsExistedException::class.java)
+
+        assertThrows<EntityIsExistedException> { categoryService.createCategory(mockCategoryCreationRequest) }
     }
 
     @Test
@@ -66,6 +70,13 @@ class CategoryServiceTests {
         val result = categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString())
 
         Assertions.assertThat(result.id).isEqualTo(mockCategory.id.toString())
+    }
+
+    @Test
+    fun `Update Category, should throw error when link is existed`() {
+        Mockito.`when`(categoryRepository.existsByName("Test update name")).thenThrow(EntityIsExistedException::class.java)
+
+        assertThrows<EntityIsExistedException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
