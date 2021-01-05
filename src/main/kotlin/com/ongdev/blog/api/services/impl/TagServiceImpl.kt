@@ -5,7 +5,7 @@ import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
 import com.ongdev.blog.api.exceptions.EntityNotFoundException
 import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
 import com.ongdev.blog.api.models.dtos.requests.TagRequest
-import com.ongdev.blog.api.models.dtos.responses.TagListResponse
+import com.ongdev.blog.api.models.dtos.responses.TagsResponse
 import com.ongdev.blog.api.models.dtos.responses.TagResponse
 import com.ongdev.blog.api.models.repositories.TagRepository
 import com.ongdev.blog.api.models.toTag
@@ -35,16 +35,16 @@ class TagServiceImpl(val tagRepository: TagRepository) : TagService {
         return tag.toTagResponse()
     }
 
-    override fun getAllTagByLink(link: String, pageable: Pageable): TagListResponse {
+    override fun getAllTagByLink(link: String, pageable: Pageable): TagsResponse {
         val tags = tagRepository.findAllByLink(link, pageable)
         val tagList = tags.toTagsResponse()
-        return TagListResponse(tagList.toList(), tags.number, tags.size, tags.numberOfElements, tags.totalPages)
+        return TagsResponse(tagList.toList(), tags.number, tags.size, tags.numberOfElements, tags.totalPages)
     }
 
-    override fun getAllTag(pageable: Pageable): TagListResponse {
+    override fun getAllTag(pageable: Pageable): TagsResponse {
         val tags = tagRepository.findAll(pageable)
         val tagList = tags.toTagsResponse()
-        return TagListResponse(tagList.toList(), tags.number, tags.size, tags.numberOfElements, tags.totalPages)
+        return TagsResponse(tagList.toList(), tags.number, tags.size, tags.numberOfElements, tags.totalPages)
     }
 
     override fun updateTagById(id: String, tagRequest: TagRequest): TagResponse {

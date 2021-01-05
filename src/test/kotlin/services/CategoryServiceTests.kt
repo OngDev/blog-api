@@ -2,7 +2,7 @@ package services
 
 import com.ongdev.blog.api.exceptions.*
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
-import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
+import com.ongdev.blog.api.models.dtos.requests.CategoryUpdatingRequest
 import com.ongdev.blog.api.models.entities.Category
 import com.ongdev.blog.api.models.repositories.CategoryRepository
 import com.ongdev.blog.api.models.toCategoryEntity
@@ -21,7 +21,7 @@ class CategoryServiceTests {
     private var categoryService: CategoryService = CategoryServiceImpl(categoryRepository)
 
     private lateinit var mockCategoryCreationRequest: CategoryCreationRequest
-    private lateinit var mockCategoryUpdatingRequest: CategoryUpdateRequest
+    private lateinit var mockCategoryUpdatingRequest: CategoryUpdatingRequest
     private lateinit var mockCategory: Category
     private lateinit var mockOptionalCategory: Optional<Category>
 
@@ -30,7 +30,7 @@ class CategoryServiceTests {
         mockCategoryCreationRequest = CategoryCreationRequest(
                 "Test name"
         )
-        mockCategoryUpdatingRequest = CategoryUpdateRequest(
+        mockCategoryUpdatingRequest = CategoryUpdatingRequest(
                 "Test update name"
         )
         mockCategory = mockCategoryCreationRequest.toCategoryEntity()
@@ -57,7 +57,7 @@ class CategoryServiceTests {
 
     @Test
     fun `Create Category, should throw error when link is existed`() {
-        Mockito.`when`(categoryRepository.existsByName("Test name")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(categoryRepository.existsByLink("test-name")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { categoryService.createCategory(mockCategoryCreationRequest) }
     }
@@ -67,23 +67,24 @@ class CategoryServiceTests {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
         Mockito.`when`(categoryRepository.save(Mockito.any(Category::class.java))).thenReturn(mockCategory)
 
-        val result = categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString())
+        val result = categoryService.updateCategoryById(mockCategoryUpdatingRequest, UUID.randomUUID().toString())
 
         Assertions.assertThat(result.id).isEqualTo(mockCategory.id.toString())
     }
 
     @Test
     fun `Update Category, should throw error when link is existed`() {
-        Mockito.`when`(categoryRepository.existsByName("Test update name")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
+        Mockito.`when`(categoryRepository.existsByLink("test-update-name")).thenThrow(EntityIsExistedException::class.java)
 
-        assertThrows<EntityIsExistedException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityIsExistedException> { categoryService.updateCategoryById(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
     fun `Update Category, should throw error when failed to find entity`() {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<EntityNotFoundException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { categoryService.updateCategoryById(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -91,14 +92,14 @@ class CategoryServiceTests {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
         Mockito.`when`(categoryRepository.save(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<EntityUpdatingFailedException> { categoryService.updateCategory(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
+        assertThrows<EntityUpdatingFailedException> { categoryService.updateCategoryById(mockCategoryUpdatingRequest, UUID.randomUUID().toString()) }
     }
 
     @Test
     fun `Get Category, should return a Category by id`() {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
 
-        val result = categoryService.getCategory(UUID.randomUUID().toString())
+        val result = categoryService.getCategoryById(UUID.randomUUID().toString())
 
         Assertions.assertThat(result.id).isEqualTo(mockCategory.id.toString())
     }
@@ -107,14 +108,14 @@ class CategoryServiceTests {
     fun `Get Category, should throw error when failed to find entity`() {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<EntityNotFoundException> { categoryService.getCategory(UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { categoryService.getCategoryById(UUID.randomUUID().toString()) }
     }
 
     @Test
     fun `Delete Category, should throw error when failed to find entity`() {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenThrow(EntityNotFoundException::class.java)
 
-        assertThrows<EntityNotFoundException> { categoryService.deleteCategory(UUID.randomUUID().toString()) }
+        assertThrows<EntityNotFoundException> { categoryService.deleteCategoryById(UUID.randomUUID().toString()) }
     }
 
     @Test
@@ -122,6 +123,6 @@ class CategoryServiceTests {
         Mockito.`when`(categoryRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalCategory)
         Mockito.`when`(categoryRepository.delete(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
-        assertThrows<EntityDeletingFailedException> { categoryService.deleteCategory(UUID.randomUUID().toString()) }
+        assertThrows<EntityDeletingFailedException> { categoryService.deleteCategoryById(UUID.randomUUID().toString()) }
     }
 }

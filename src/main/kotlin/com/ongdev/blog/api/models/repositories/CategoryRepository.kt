@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface CategoryRepository : JpaRepository<Category, UUID>{
-    fun existsByName(name: String):Boolean
+    fun existsByLink(name: String):Boolean
 }

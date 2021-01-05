@@ -4,9 +4,8 @@ import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
 import com.ongdev.blog.api.models.dtos.requests.TagRequest
 import com.ongdev.blog.api.models.dtos.requests.*
-import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
-import com.ongdev.blog.api.models.dtos.responses.CategoryCreationResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleResponse
+import com.ongdev.blog.api.models.dtos.responses.CategoryResponse
 import com.ongdev.blog.api.models.dtos.responses.TagResponse
 import com.ongdev.blog.api.models.entities.Article
 import com.ongdev.blog.api.models.entities.Category
@@ -23,7 +22,7 @@ fun ArticleCreationRequest.toArticleEntity() = Article(
         link = appUtils.removeAccent(title)
 )
 
-fun Article.toArticleCreationResponse() = ArticleCreationResponse(
+fun Article.toArticleResponse() = ArticleResponse(
         id.toString(),
         title = title,
         description = description,
@@ -32,16 +31,7 @@ fun Article.toArticleCreationResponse() = ArticleCreationResponse(
         publishDate = publishDate
 )
 
-fun Article.toArticleUpdatingResponse() = ArticleUpdatingResponse(
-        id.toString(),
-        title = title,
-        description = description,
-        content = content,
-        link = link,
-        publishDate = publishDate
-)
-
-fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
+fun ArticleUpdatingRequest.toArticleEntity(article: Article): Article {
     article.content = content
     article.description = description
     article.title = title
@@ -50,7 +40,7 @@ fun ArticleUpdatingRequest.mapToArticle(article: Article): Article {
 }
 
 fun Page<Article>.toPageArticleResponse() = map {
-    it.toArticleCreationResponse()
+    it.toArticleResponse()
 }
 
 fun TagRequest.toTag() = Tag(
@@ -73,15 +63,16 @@ fun Page<Tag>.toTagsResponse() = map{
     it.toTagResponse()
 }
 
-fun CategoryUpdateRequest.toCategory(category: Category): Category {
+fun CategoryUpdatingRequest.toCategoryEntity(category: Category): Category {
     category.name = name
+    category.link = appUtils.removeAccent(name)
     return category
 }
 
-fun Category.toCategoryCreationResponse() = CategoryCreationResponse(
+fun Category.toCategoryResponse() = CategoryResponse(
         id.toString(),
         name = name,
-        link = appUtils.removeAccent(name)
+        link = link
 )
 
 fun CategoryCreationRequest.toCategoryEntity() = Category(
@@ -90,5 +81,5 @@ fun CategoryCreationRequest.toCategoryEntity() = Category(
 )
 
 fun Page<Category>.toPageCategoryResponse() = map {
-    it.toCategoryCreationResponse()
+    it.toCategoryResponse()
 }

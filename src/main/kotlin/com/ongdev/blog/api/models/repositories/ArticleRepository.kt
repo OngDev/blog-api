@@ -12,7 +12,7 @@ import java.util.*
 interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
     fun findAllByTitle(title: String, pageable: Pageable): Page<Article>
 
-    fun existsByTitle(title: String):Boolean
+    fun existsByLink(title: String):Boolean
 
 	@Query("SELECT a from Article a join a.categories ac on ac.id=:category_id")
 	fun findAllArticlesByCategoryId(category_id:UUID, pageable: Pageable):Page<Article>

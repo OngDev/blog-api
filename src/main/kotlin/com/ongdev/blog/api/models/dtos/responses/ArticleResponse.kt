@@ -2,7 +2,7 @@ package com.ongdev.blog.api.models.dtos.responses
 
 import java.util.*
 
-class ArticleCreationResponse(
+class ArticleResponse(
 	val id: String,
     val title: String,
     val description: String,

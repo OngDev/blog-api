@@ -1,9 +1,9 @@
 package com.ongdev.blog.api.controllers
 
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
-import com.ongdev.blog.api.models.dtos.requests.CategoryUpdateRequest
-import com.ongdev.blog.api.models.dtos.responses.CategoryCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.CategoryListWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.requests.CategoryUpdatingRequest
+import com.ongdev.blog.api.models.dtos.responses.CategoryResponse
+import com.ongdev.blog.api.models.dtos.responses.CategoriesWithPaginationResponse
 import com.ongdev.blog.api.services.interfaces.CategoryService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -16,32 +16,32 @@ import org.springframework.web.bind.annotation.*
 class CategoryController(private val categoryService: CategoryService) {
 
     @GetMapping("{id}")
-    fun getCategoryById(@PathVariable(name = "id", required = true) id: String): ResponseEntity<CategoryCreationResponse> {
-        val category = categoryService.getCategory(id)
+    fun getCategoryById(@PathVariable(name = "id", required = true) id: String): ResponseEntity<CategoryResponse> {
+        val category = categoryService.getCategoryById(id)
         return ResponseEntity(category, HttpStatus.OK)
     }
 
     @GetMapping
-    fun getAllCategories(@PageableDefault(size = 10, page = 0) pageable: Pageable): ResponseEntity<CategoryListWithPaginationResponse> {
+    fun getAllCategories(@PageableDefault(size = 10, page = 0) pageable: Pageable): ResponseEntity<CategoriesWithPaginationResponse> {
         val categories = categoryService.getAllCategories(pageable)
         return ResponseEntity(categories, HttpStatus.OK)
     }
 
     @PostMapping
-    fun createCategory(@RequestBody categoryCreationRequest: CategoryCreationRequest): ResponseEntity<CategoryCreationResponse> {
+    fun createCategory(@RequestBody categoryCreationRequest: CategoryCreationRequest): ResponseEntity<CategoryResponse> {
         val category = categoryService.createCategory(categoryCreationRequest)
         return ResponseEntity(category, HttpStatus.OK)
     }
 
     @PutMapping("{id}")
-    fun updateCategory(@PathVariable(name = "id", required = true) id: String, @RequestBody categoryUpdateRequest: CategoryUpdateRequest): ResponseEntity<CategoryCreationResponse> {
-        val category = categoryService.updateCategory(categoryUpdateRequest, id)
+    fun updateCategory(@PathVariable(name = "id", required = true) id: String, @RequestBody categoryUpdatingRequest: CategoryUpdatingRequest): ResponseEntity<CategoryResponse> {
+        val category = categoryService.updateCategoryById(categoryUpdatingRequest, id)
         return ResponseEntity(category, HttpStatus.OK)
     }
 
     @DeleteMapping("{id}")
     fun deleteCategory(@PathVariable(name = "id", required = true) id: String): ResponseEntity<Void> {
-        categoryService.deleteCategory(id)
+        categoryService.deleteCategoryById(id)
         return ResponseEntity(HttpStatus.OK)
     }
 }

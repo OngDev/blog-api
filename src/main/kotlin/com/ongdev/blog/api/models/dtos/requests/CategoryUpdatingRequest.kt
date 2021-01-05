@@ -1,5 +1,5 @@
 package com.ongdev.blog.api.models.dtos.requests
 
-class CategoryUpdateRequest (
+class CategoryUpdatingRequest (
         val name: String
 )

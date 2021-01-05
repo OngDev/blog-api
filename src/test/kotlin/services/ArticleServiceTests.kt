@@ -8,7 +8,6 @@ import com.ongdev.blog.api.models.repositories.ArticleRepository
 import com.ongdev.blog.api.models.toArticleEntity
 import com.ongdev.blog.api.services.impl.ArticleServiceImpl
 import com.ongdev.blog.api.services.interfaces.ArticleService
-import net.bytebuddy.utility.RandomString
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -91,7 +90,7 @@ class ArticleServiceTests {
 
     @Test
     fun `Create Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.existsByTitle("Test title")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(articleRepository.existsByLink("test-title")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { articleService.createArticle(mockArticleCreationRequest) }
     }
@@ -123,7 +122,8 @@ class ArticleServiceTests {
 
     @Test
     fun `Update Article, should throw error when link is existed`() {
-        Mockito.`when`(articleRepository.existsByTitle("Test update title")).thenThrow(EntityIsExistedException::class.java)
+        Mockito.`when`(articleRepository.findById(Mockito.any(UUID::class.java))).thenReturn(mockOptionalArticle)
+        Mockito.`when`(articleRepository.existsByLink("test-update-title")).thenThrow(EntityIsExistedException::class.java)
 
         assertThrows<EntityIsExistedException> { articleService.updateArticle(mockArticleUpdatingRequest, UUID.randomUUID().toString()) }
     }

@@ -1,6 +1,6 @@
 package com.ongdev.blog.api.models.dtos.responses
 
-class TagListResponse (
+class TagsResponse (
         val result: List<TagResponse>,
         val page: Int,
         val size: Int,
