@@ -7,8 +7,7 @@ import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
 import com.ongdev.blog.api.models.*
 import com.ongdev.blog.api.models.dtos.requests.CommentCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CommentUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.CommentCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.CommentUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.CommentResponse
 import com.ongdev.blog.api.models.repositories.CommentRepository
 import com.ongdev.blog.api.services.interfaces.CommentService
 import org.springframework.stereotype.Service
@@ -17,23 +16,23 @@ import java.util.*
 @Service
 class CommentServiceImpl(val commentRepository: CommentRepository) : CommentService {
 
-    override fun createComment(commentCreationRequest: CommentCreationRequest): CommentCreationResponse {
+    override fun createComment(commentCreationRequest: CommentCreationRequest): CommentResponse {
         val comment = commentCreationRequest.toCommentEntity()
         try {
-            return commentRepository.save(comment).toCommentCreationResponse(emptyList())
+            return commentRepository.save(comment).toCommentResponse(emptyList())
         } catch (ex: IllegalArgumentException) {
             throw EntityCreationFailedException("comment")
         }
     }
 
-    override fun updateComment(CommentUpdatingRequest: CommentUpdatingRequest, id: String): CommentUpdatingResponse {
+    override fun updateComment(CommentUpdatingRequest: CommentUpdatingRequest, id: String): CommentResponse {
         val comment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
             throw EntityNotFoundException("comment", "id", id)
         }
-        val updateComment = CommentUpdatingRequest.toComment(comment)
+        val updateComment = CommentUpdatingRequest.toCommentEntity(comment)
         val children = updateComment.children?.toChildrenResponse()
         try {
-            return commentRepository.save(updateComment).toCommentUpdatingResponse(children)
+            return commentRepository.save(updateComment).toCommentResponse(children)
         } catch (ex: IllegalArgumentException) {
             throw EntityUpdatingFailedException("comment")
         }
@@ -50,11 +49,11 @@ class CommentServiceImpl(val commentRepository: CommentRepository) : CommentServ
         }
     }
 
-    override fun getComment(id: String): CommentCreationResponse {
+    override fun getComment(id: String): CommentResponse {
         val comment = commentRepository.findById(UUID.fromString(id)).orElseThrow {
             throw EntityNotFoundException("comment", "id", id)
         }
         val children = comment.children?.toChildrenResponse()
-        return comment.toCommentCreationResponse(children)
+        return comment.toCommentResponse(children)
     }
 }

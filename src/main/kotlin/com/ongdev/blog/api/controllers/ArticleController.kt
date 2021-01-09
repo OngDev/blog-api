@@ -2,9 +2,8 @@ package com.ongdev.blog.api.controllers
 
 import com.ongdev.blog.api.models.dtos.requests.ArticleCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.ArticleUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.ArticleCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleListWithPaginationResponse
-import com.ongdev.blog.api.models.dtos.responses.ArticleUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticleResponse
+import com.ongdev.blog.api.models.dtos.responses.ArticlesWithPaginationResponse
 import com.ongdev.blog.api.services.interfaces.ArticleService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 class ArticleController(private val articleService: ArticleService) {
 
     @PostMapping
-    fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest): ResponseEntity<ArticleCreationResponse> {
+    fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest): ResponseEntity<ArticleResponse> {
         val articleCreationResponse = articleService.createArticle(articleCreationRequest)
         return ResponseEntity(articleCreationResponse, HttpStatus.OK)
     }
@@ -30,7 +29,7 @@ class ArticleController(private val articleService: ArticleService) {
             @PageableDefault(size = 10
                     , page = 0
                     , sort = ["title"]) pageable: Pageable
-    ): ResponseEntity<ArticleListWithPaginationResponse> {
+    ): ResponseEntity<ArticlesWithPaginationResponse> {
         val articleListResponse = if (title.isEmpty()) articleService.getArticlesWithPaginationAndSort(pageable)
         else articleService.getArticlesByTitleWithPaginationAndSort(title, pageable)
         return ResponseEntity(articleListResponse, HttpStatus.OK)
@@ -40,7 +39,7 @@ class ArticleController(private val articleService: ArticleService) {
     fun updateArticle(
             @PathVariable(name = "id", required = true) id: String,
             @RequestBody articleUpdatingRequest: ArticleUpdatingRequest
-    ): ResponseEntity<ArticleUpdatingResponse> = ResponseEntity(
+    ): ResponseEntity<ArticleResponse> = ResponseEntity(
             articleService.updateArticle(articleUpdatingRequest, id),
             HttpStatus.OK)
 
@@ -56,11 +55,11 @@ class ArticleController(private val articleService: ArticleService) {
             @PageableDefault(size = 10
                     , page = 0
                     , sort = ["title"]) pageable: Pageable
-    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+    ): ResponseEntity<ArticlesWithPaginationResponse> = ResponseEntity(
             articleService.getArticlesByCategory(id, pageable), HttpStatus.OK)
 
     @GetMapping("{id}")
-    fun getArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<ArticleCreationResponse> {
+    fun getArticle(@PathVariable(name = "id", required = true) id: String): ResponseEntity<ArticleResponse> {
         return ResponseEntity(articleService.getArticleById(id), HttpStatus.OK)
     }
 
@@ -70,7 +69,7 @@ class ArticleController(private val articleService: ArticleService) {
             @PageableDefault(size = 10
                     , page = 0
                     , sort = ["title"]) pageable: Pageable
-    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+    ): ResponseEntity<ArticlesWithPaginationResponse> = ResponseEntity(
             articleService.getArticlesByTagId(id, pageable), HttpStatus.OK)
 
     @GetMapping("tag")
@@ -79,6 +78,6 @@ class ArticleController(private val articleService: ArticleService) {
             @PageableDefault(size = 10
                     , page = 0
                     , sort = ["title"]) pageable: Pageable
-    ): ResponseEntity<ArticleListWithPaginationResponse> = ResponseEntity(
+    ): ResponseEntity<ArticlesWithPaginationResponse> = ResponseEntity(
             articleService.getArticlesByTagLink(link, pageable), HttpStatus.OK)
 }

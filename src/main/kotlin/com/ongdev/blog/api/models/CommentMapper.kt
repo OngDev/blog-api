@@ -2,12 +2,11 @@ package com.ongdev.blog.api.models
 
 import com.ongdev.blog.api.models.dtos.requests.CommentCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CommentUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.ChildCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.CommentCreationResponse
-import com.ongdev.blog.api.models.dtos.responses.CommentUpdatingResponse
+import com.ongdev.blog.api.models.dtos.responses.ChildResponse
+import com.ongdev.blog.api.models.dtos.responses.CommentResponse
 import com.ongdev.blog.api.models.entities.Comment
 
-fun Comment.toChildCreationResponse() = ChildCreationResponse(
+fun Comment.toChildResponse() = ChildResponse(
         id.toString(),
         userId.toString(),
         content = content,
@@ -22,7 +21,7 @@ fun CommentCreationRequest.toCommentEntity() = Comment(
         children = children
 )
 
-fun Comment.toCommentCreationResponse(children: List<ChildCreationResponse>?) = CommentCreationResponse(
+fun Comment.toCommentResponse(children: List<ChildResponse>?) = CommentResponse(
         id = id.toString(),
         userId = userId.toString(),
         content = content,
@@ -30,20 +29,12 @@ fun Comment.toCommentCreationResponse(children: List<ChildCreationResponse>?) = 
         children = children?.toSet()
 )
 
-fun Comment.toCommentUpdatingResponse(children: List<ChildCreationResponse>?) = CommentUpdatingResponse(
-        id.toString(),
-        userId.toString(),
-        content = content,
-        createAt = createAt,
-        children = children?.toSet()
-)
-
-fun CommentUpdatingRequest.toComment(comment: Comment): Comment {
+fun CommentUpdatingRequest.toCommentEntity(comment: Comment): Comment {
     comment.content = content
     comment.createAt = createAt
     return comment
 }
 
 fun Set<Comment>.toChildrenResponse() = map {
-    it.toChildCreationResponse()
+    it.toChildResponse()
 }
