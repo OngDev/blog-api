@@ -1,7 +1,10 @@
 package services
 
 
-import com.ongdev.blog.api.exceptions.*
+import com.ongdev.blog.api.exceptions.EntityCreationFailedException
+import com.ongdev.blog.api.exceptions.EntityDeletingFailedException
+import com.ongdev.blog.api.exceptions.EntityNotFoundException
+import com.ongdev.blog.api.exceptions.EntityUpdatingFailedException
 import com.ongdev.blog.api.models.dtos.requests.TagRequest
 import com.ongdev.blog.api.models.entities.Tag
 import com.ongdev.blog.api.models.repositories.TagRepository
@@ -15,9 +18,8 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 import org.springframework.data.domain.*
-
 import java.util.*
 
 
