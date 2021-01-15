@@ -47,7 +47,7 @@ class CategoryController(private val categoryService: CategoryService) {
 
     @GetMapping("link/{link}")
     fun getCategoriesByLink(@PathVariable(name = "link", required = true) link: String
-                            , @PageableDefault(size = 10, page = 0) pageable: Pageable): ResponseEntity<CategoryListWithPaginationResponse> {
+                            , @PageableDefault(size = 10, page = 0) pageable: Pageable): ResponseEntity<CategoriesWithPaginationResponse> {
         val categories = categoryService.getCategoriesByLink(link, pageable)
         return ResponseEntity(categories, HttpStatus.OK)
     }
