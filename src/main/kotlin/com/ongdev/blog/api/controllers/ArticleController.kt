@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("articles")
 class ArticleController(private val articleService: ArticleService) {
 
-    @PostMapping
+    @PostMapping(consumes = ["application/json"], produces = ["application/json"])
     fun createArticle(@RequestBody articleCreationRequest: ArticleCreationRequest): ResponseEntity<ArticleResponse> {
         val articleCreationResponse = articleService.createArticle(articleCreationRequest)
         return ResponseEntity(articleCreationResponse, HttpStatus.OK)
@@ -35,7 +35,7 @@ class ArticleController(private val articleService: ArticleService) {
         return ResponseEntity(articleListResponse, HttpStatus.OK)
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}", consumes = ["application/json"], produces = ["application/json"])
     fun updateArticle(
             @PathVariable(name = "id", required = true) id: String,
             @RequestBody articleUpdatingRequest: ArticleUpdatingRequest

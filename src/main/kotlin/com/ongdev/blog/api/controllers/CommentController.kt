@@ -17,14 +17,14 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity(commentService.getComment(id), HttpStatus.OK)
     }
 
-    @PostMapping
+    @PostMapping(consumes = ["application/json"], produces = ["application/json"])
     fun createComment(
             @RequestBody commentCreationRequest: CommentCreationRequest): ResponseEntity<CommentResponse> {
         val commentCreationResponse = commentService.createComment(commentCreationRequest)
         return ResponseEntity(commentCreationResponse, HttpStatus.OK)
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}", consumes = ["application/json"], produces = ["application/json"])
     fun updateComment(
             @PathVariable(name = "id", required = true) id: String,
             @RequestBody commentUpdatingRequest: CommentUpdatingRequest
