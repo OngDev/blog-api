@@ -22,4 +22,6 @@ interface ArticleRepository : PagingAndSortingRepository<Article, UUID> {
 
 	@Query("SELECT a from Article a join a.tags at on at.link=:tag_link")
 	fun findAllArticlesByTagLink(tag_link:String, pageable: Pageable):Page<Article>
+
+	fun findAllByLink(link: String, pageable: Pageable):Page<Article>
 }

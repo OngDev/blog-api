@@ -1,12 +1,15 @@
 package com.ongdev.blog.api.services.impl
 
 import com.ongdev.blog.api.exceptions.*
-import com.ongdev.blog.api.models.*
+import com.ongdev.blog.api.models.appUtils
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CategoryUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.CategoryResponse
 import com.ongdev.blog.api.models.dtos.responses.CategoriesWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.responses.CategoryResponse
 import com.ongdev.blog.api.models.repositories.CategoryRepository
+import com.ongdev.blog.api.models.toCategoryEntity
+import com.ongdev.blog.api.models.toCategoryResponse
+import com.ongdev.blog.api.models.toPageCategoryResponse
 import com.ongdev.blog.api.services.interfaces.CategoryService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -68,5 +71,11 @@ class CategoryServiceImpl(val categoryRepository: CategoryRepository) : Category
         } catch (ex: IllegalArgumentException) {
             throw EntityDeletingFailedException("category")
         }
+    }
+
+    override fun getCategoriesByLink(link: String, pageable: Pageable): CategoriesWithPaginationResponse {
+        val categories = categoryRepository.findAllByLink(link, pageable)
+        val pageCategoryResponse = categories.toPageCategoryResponse()
+        return CategoriesWithPaginationResponse(pageCategoryResponse)
     }
 }

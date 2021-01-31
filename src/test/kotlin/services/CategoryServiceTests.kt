@@ -13,6 +13,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import java.util.*
 
 class CategoryServiceTests {
@@ -24,6 +27,7 @@ class CategoryServiceTests {
     private lateinit var mockCategoryUpdatingRequest: CategoryUpdatingRequest
     private lateinit var mockCategory: Category
     private lateinit var mockOptionalCategory: Optional<Category>
+    private lateinit var mockPageCategories: Optional<Page<Category>>
 
     @BeforeEach
     internal fun setUp() {
@@ -36,6 +40,12 @@ class CategoryServiceTests {
         mockCategory = mockCategoryCreationRequest.toCategoryEntity()
         mockCategory.id = UUID.randomUUID()
         mockOptionalCategory = Optional.of(mockCategory)
+        val totalElement = ArrayList<Category>()
+        for (i in 1..10) {
+            totalElement.add(mockCategory)
+        }
+        val pagingElement: PageImpl<Category> = PageImpl(totalElement)
+        mockPageCategories = Optional.of(pagingElement)
     }
 
     @Test
@@ -124,5 +134,15 @@ class CategoryServiceTests {
         Mockito.`when`(categoryRepository.delete(Mockito.any(Category::class.java))).thenThrow(IllegalArgumentException())
 
         assertThrows<EntityDeletingFailedException> { categoryService.deleteCategoryById(UUID.randomUUID().toString()) }
+    }
+
+    @Test
+    fun `Get Categories By Link, should return Categories`() {
+        val page = PageRequest.of(0, 10)
+        Mockito.`when`(categoryRepository.findAllByLink("Test link", page))
+                .thenReturn(mockPageCategories.get())
+        val result = categoryService.getCategoriesByLink("Test link", page)
+
+        Assertions.assertThat(result.result.totalElements).isEqualTo(10)
     }
 }
