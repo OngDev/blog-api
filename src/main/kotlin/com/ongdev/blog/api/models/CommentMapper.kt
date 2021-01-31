@@ -5,6 +5,7 @@ import com.ongdev.blog.api.models.dtos.requests.CommentUpdatingRequest
 import com.ongdev.blog.api.models.dtos.responses.ChildResponse
 import com.ongdev.blog.api.models.dtos.responses.CommentResponse
 import com.ongdev.blog.api.models.entities.Comment
+import org.springframework.data.domain.Page
 
 fun Comment.toChildResponse() = ChildResponse(
         id.toString(),
@@ -14,16 +15,21 @@ fun Comment.toChildResponse() = ChildResponse(
 )
 
 fun CommentCreationRequest.toCommentEntity() = Comment(
-        content = content,
-        createAt = createAt,
-        article = article,
-        parent = parent,
-        children = children
+        userId = userId,
+        content = content
 )
 
-fun Comment.toCommentResponse(children: List<ChildResponse>?) = CommentResponse(
-        id = id.toString(),
+fun Comment.toCommentCreationResponse(children: List<ChildResponse>?) = CommentResponse(
+        commentId = id.toString(),
         userId = userId.toString(),
+        content = content,
+        createAt = createAt,
+        children = children?.toSet()
+)
+
+fun Comment.toCommentUpdatingResponse(children: List<ChildResponse>?) = CommentResponse(
+        id.toString(),
+        userId.toString(),
         content = content,
         createAt = createAt,
         children = children?.toSet()
@@ -31,10 +37,13 @@ fun Comment.toCommentResponse(children: List<ChildResponse>?) = CommentResponse(
 
 fun CommentUpdatingRequest.toCommentEntity(comment: Comment): Comment {
     comment.content = content
-    comment.createAt = createAt
     return comment
 }
 
 fun Set<Comment>.toChildrenResponse() = map {
     it.toChildResponse()
+}
+
+fun Page<Comment>.toPageCommentResponse() = map {
+    it.toCommentCreationResponse(it.children?.toChildrenResponse())
 }
