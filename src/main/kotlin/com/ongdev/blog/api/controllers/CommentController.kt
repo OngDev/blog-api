@@ -20,7 +20,7 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity(commentService.getCommentById(commentId), HttpStatus.OK)
     }
 
-    @PostMapping
+    @PostMapping(consumes = ["application/json"], produces = ["application/json"])
     fun createComment(
             @RequestBody commentCreationRequest: CommentCreationRequest): ResponseEntity<CommentResponse> {
         val commentCreationResponse = commentService.createComment(commentCreationRequest)
