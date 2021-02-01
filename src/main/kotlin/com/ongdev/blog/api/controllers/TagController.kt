@@ -1,8 +1,8 @@
 package com.ongdev.blog.api.controllers
 
 import com.ongdev.blog.api.models.dtos.requests.TagRequest
-import com.ongdev.blog.api.models.dtos.responses.TagsResponse
 import com.ongdev.blog.api.models.dtos.responses.TagResponse
+import com.ongdev.blog.api.models.dtos.responses.TagsResponse
 import com.ongdev.blog.api.services.interfaces.TagService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -33,13 +33,13 @@ class TagController(private val tagService: TagService) {
         return ResponseEntity(tags, HttpStatus.OK)
     }
 
-    @PostMapping
+    @PostMapping(consumes = ["application/json"], produces = ["application/json"])
     fun createTag(@RequestBody TagRequest: TagRequest): ResponseEntity<TagResponse> {
         val tag = tagService.addTag(TagRequest)
         return ResponseEntity(tag, HttpStatus.OK)
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}", consumes = ["application/json"], produces = ["application/json"])
     fun updateTagById(@PathVariable(name = "id", required = true) id: String, @RequestBody tagRequest: TagRequest): ResponseEntity<TagResponse> {
         val tag = tagService.updateTagById(id, tagRequest)
         return ResponseEntity(tag, HttpStatus.OK)

@@ -2,8 +2,8 @@ package com.ongdev.blog.api.controllers
 
 import com.ongdev.blog.api.models.dtos.requests.CategoryCreationRequest
 import com.ongdev.blog.api.models.dtos.requests.CategoryUpdatingRequest
-import com.ongdev.blog.api.models.dtos.responses.CategoryResponse
 import com.ongdev.blog.api.models.dtos.responses.CategoriesWithPaginationResponse
+import com.ongdev.blog.api.models.dtos.responses.CategoryResponse
 import com.ongdev.blog.api.services.interfaces.CategoryService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -27,13 +27,13 @@ class CategoryController(private val categoryService: CategoryService) {
         return ResponseEntity(categories, HttpStatus.OK)
     }
 
-    @PostMapping
+    @PostMapping(consumes = ["application/json"], produces = ["application/json"])
     fun createCategory(@RequestBody categoryCreationRequest: CategoryCreationRequest): ResponseEntity<CategoryResponse> {
         val category = categoryService.createCategory(categoryCreationRequest)
         return ResponseEntity(category, HttpStatus.OK)
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}", consumes = ["application/json"], produces = ["application/json"])
     fun updateCategory(@PathVariable(name = "id", required = true) id: String, @RequestBody categoryUpdatingRequest: CategoryUpdatingRequest): ResponseEntity<CategoryResponse> {
         val category = categoryService.updateCategoryById(categoryUpdatingRequest, id)
         return ResponseEntity(category, HttpStatus.OK)
